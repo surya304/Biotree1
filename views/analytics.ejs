@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Biotree</title>
+    <meta name="description" content="Dashboard UI Kit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-signin-client_id" content="347643143038-1poc0bhn688aug03hpjlq89r6c6o1bau.apps.googleusercontent.com">
+
+
+    <link rel="stylesheet" href="https://use.typekit.net/foj0sle.css">
+
+    <link rel="stylesheet" href="/userui/bootstrap/bootstrap.min.css">
+    <link rel="shortcut icon" href="/userui/64.png" type="image/x-icon">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/userui/css/main.css">
+    <link rel="stylesheet" href="/userui/css/profile.css">
+    <link rel="stylesheet" href="/userui/css/responsive.css">
+    <link rel="stylesheet" href="/userui/css/colors.css">
+    <link rel="stylesheet" href="/userui/css/custom.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <!-- Stylesheet -->
+
+    <!-- <script src="js/app.js"></script> -->
+
+    <script type="text/javascript">
+        $(function() {
+            // $('.getclientid').on("click", function() {
+            //     console.log("dumb ass");
+            //     let id = $(this).prev().val();
+            //     console.log(id);
+            //     let name = $(this).html();
+            //     name = name.trim();
+            //     console.log(name);
+            //     $('.printclientvalue').html(name);
+            //     $('clientid1').val(id);
+            // });
+
+
+            // /////////////////////////////////////////
+            // let one = <%- JSON.stringify(linkclicks)%>;
+            // let two = <%- JSON.stringify(totallinkscreated)%>;
+            let shorturlsList = <%- JSON.stringify(shorturlsList)%>;
+            let indiclientdata = <%- JSON.stringify(indiclientdata)%>;
+
+
+            // let four = <%- JSON.stringify(pixelsconnected)%>;
+            // $('.u1').html(one);
+            // $('.u2').html(two);
+            console.log(indiclientdata, "asd");
+
+            let sum1 = 0;
+            for (let j = 0; j < shorturlsList.length; j++) {
+
+                sum1 += +Number(shorturlsList[j].clicks);
+            }
+
+            let result = shorturlsList.filter(function(o1) {
+                return o1.type === "instabio";
+
+
+            });
+            $('.u1').html(result.length);
+
+            $('.u3').html(sum1);
+            // clientsList
+            <%if (from === "allclients") { %>
+            let sum2 = 0;
+            for (let j = 0; j < shorturlsList.length; j++) {
+
+                sum2 += +Number(shorturlsList[j].tracking.length);
+            }
+            let fullclients = <%- JSON.stringify(clientsList)%>;
+
+            console.log(fullclients, "fullclients");
+            $('.u4').html(sum2);
+
+
+            <% } else {%>
+
+            $('.u4').html(indiclientdata.tracking.length);
+
+
+            <% } %>
+
+
+            let analytics = <%- JSON.stringify(clientsanalyticslist)%>;
+            console.log(analytics);
+
+            for (let index = 0; index < analytics.length; index++) {
+                const element = analytics[index];
+                let url = element.shorturl;
+                let icons = element.pixelsicons[index];
+                let clicks = element.clicks;
+                let source = element.source;
+                let medium = element.medium;
+                let name = element.name;
+                let date = element.date;
+                for (let index1 = 0; index1 < analytics[index].pixelsicons.length; index1++) {
+                    let see = analytics[index].pixelsicons[index1].icon;
+                    let listitemtoadd = makelist(url, see, clicks, source, medium, name, date);
+                    // $('.appendtbdata').append(listitemtoadd);
+
+                }
+                // $('.appendtbdata').append(listitemtoadd);
+
+            }
+
+            function makelist(url, see, clicks, source, medium, name, date) {
+
+                console.log(see);
+                console.log(clicks);
+                let $alldata = '<tr class="c-table__row">' +
+                    '                                <td class="c-table__cell">' +
+                    '                                    Tap.sr' + url + '</td>' +
+                    '                                <td class="c-table__cell">' +
+                    '                                    <i class="' + see + ' overlapicon"></i>' +
+                    '                                    <i class="' + see + ' overlapicon"></i>' +
+                    '                                    <i class="' + see + ' overlapicon"></i>' +
+                    '                                </td>' +
+                    '                                <td class="c-table__cell">' + clicks + ' Clicks</td>' +
+                    '                                <td class="c-table__cell">' + source + '</td>' +
+                    '                                <td class="c-table__cell">' + medium + '</td>' +
+                    '                                <td class="c-table__cell">' + name + '</td>' +
+                    '                                <td class="c-table__cell">' + date + '</td>' +
+                    '                            </tr>';
+                return $alldata;
+            }
+
+
+        });
+    </script>
+    <style>
+        @import url("https://use.typekit.net/foj0sle.css");
+        .bg-card {
+            background-color: #fff!important;
+            border-radius: 5px!important;
+            box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important;
+        }
+        .border-l-blue {
+            border-left: 5px solid #4780E7;
+        }
+        .border-l-green {
+            border-left: 5px solid #1cc88a;
+        }
+        .border-l-yellow {
+            border-left: 5px solid #f6c23e;
+        }
+        .border-l-skyblu {
+            border-left: 5px solid #36b9cc;
+        }
+        .bg-card h3,h4{
+            color: #273342!important;
+
+        }
+    </style>
+</head>
+
+<body>
+    <header class="c-navbar">
+        <a class="c-navbar__brand " href="/dashboard">
+            <img src="/userui/biotree_logo.png" alt="Dashboard's Logo">
+        </a>
+        <!-- Navigation items that will be collapes and toggle in small viewports -->
+        <nav class="c-nav collapse" id="main-nav">
+            <ul class="c-nav__list">
+                <!-- <li class="c-nav__item">
+                    <a class="c-nav__link" href="#!">Client Name</a>
+                </li> -->
+                <%if (client_count > 0) { %>
+
+                    <li class="c-nav__item" style="font-weight: bold">
+                        <div class="c-dropdown dropdown">
+                            Client :
+
+                            <a class="u-text-mute u-text-small dropdown-toggle printclientvalue" id="dropdwonMenuProjects" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <%=indiclientdata.name %>
+                                <i class="u-ml-xsmall fa fa-angle-down"></i>
+
+                            </a>
+
+                            <div class="c-dropdown__menu dropdown-menu here fulldata51 clientnameprint" aria-labelledby="dropdwonMenuProjects" style="padding-bottom: 0;padding-top: 0;width: 200px;">
+
+
+
+                                <% for(let i=0; i < clientsList.length; i++) { %>
+                                    <input type="text" value="<%=clientsList[i]._id%>" id="clientlist" style="display:none">
+                                    <a class="c-dropdown__item text-center getclientid" style="font-size:13px;" href="/analytics/<%=clientsList[i]._id%> ">
+                                        <%=clientsList[i].name %>
+                                    </a>
+
+                                    <% } %>
+
+                                        <!-- ////////////////////////////////////////////////////////////////////// -->
+
+
+
+                                        <!-- ////////////////////////////////////////////////////////////////////// -->
+                                        <input type="text " value="allclients " id="clientlist " style="display:none ">
+
+                                        <a class="c-dropdown__item getclientid " href="/analytics/allclients " style="color:#fff; background: #4780E7;text-align: center ">See All clients
+                                            </a>
+
+                            </div>
+                        </div>
+                    </li>
+                    <% } %>
+
+                        <li class="c-nav__item ">
+
+                        </li>
+            </ul>
+        </nav>
+        <!-- // Navigation items  -->
+
+
+
+        <div class="c-dropdown u-ml-auto dropdown ">
+            <a class="c-avatar c-avatar--xsmall has-dropdown dropdown-toggle " href="# " id="dropdwonMenuAvatar " data-toggle="dropdown " aria-haspopup="true " aria-expanded="false ">
+                <!-- <img class="c-avatar__img " src="./64.png " alt="User 's Profile Picture"> -->
+                <i class="fa fa-user" aria-hidden="true" style="font-size:25px;color:grey"></i>
+
+            </a>
+
+            <div class="c-dropdown__menu dropdown-menu dropdown-menu-right" aria-labelledby="dropdwonMenuAvatar">
+                <a class="c-dropdown__item dropdown-item" href="/profile"> Profile</a>
+                <!-- <a class="c-dropdown__item dropdown-item" href="/logout">LogOut</a> -->
+                <a class="c-dropdown__item dropdown-item" href="/logout" onclick="signOut();">Sign out</a>
+                <!-- <a class="c-dropdown__item dropdown-item" href="#">Manage Roles</a> -->
+            </div>
+        </div>
+
+        <button class="c-nav-toggle" type="button" data-toggle="collapse" data-target="#main-nav">
+            <span class="c-nav-toggle__bar"></span>
+            <span class="c-nav-toggle__bar"></span>
+            <span class="c-nav-toggle__bar"></span>
+        </button>
+        <!-- // .c-nav-toggle -->
+    </header>
+    <ul class="breadcrumb1">
+        <li><a id="breadvijaya" href="/dashboard">Home</a></li>
+        <li><a class="active" style="cursor:default">Analytics</a></li>
+
+    </ul>
+    <div class="container">
+        <div class="g-signin2" data-onsuccess="onSignIn" style="width: 1px;opacity: 0;"> </div>
+
+        
+
+
+        <div class="row u-mt-medium">
+            <div class="col-sm-6 col-lg-3">
+
+
+                <div class="c-state bg-card border-l-blue ">
+                    <h3 class="c-state__title">Total Insta Bio's Created</h3>
+                    <h4 class="c-state__number u1"></h4>
+                    <!-- <p class="c-state__status">13% Increase</p> -->
+                    <!-- <span class="c-state__indicator">
+                        <i class="fa fa-arrow-circle-o-down"></i>
+                    </span> -->
+                </div>
+                <!-- // c-state -->
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="c-state c-state--success bg-card border-l-green ">
+                    <h3 class="c-state__title"> Total Links Created</h3>
+                    <h4 class="c-state__number u2">
+
+                        <%=shorturlsList.length%>
+
+                    </h4>
+                    <!-- <p class="c-state__status">4% Increase</p> -->
+                    <!-- <span class="c-state__indicator">
+                        <i class="fa fa-arrow-circle-o-up"></i>
+                    </span> -->
+                </div>
+                <!-- // c-state -->
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="c-state c-state--warning bg-card border-l-skyblu ">
+                    <h3 class="c-state__title" > Total Link Clicks</h3>
+                    <h4 class="c-state__number u3">
+                    </h4>
+                    <!-- <p class="c-state__status">21% Decrease</p> -->
+                    <!-- <span class="c-state__indicator">
+                        <i class="fa fa-arrow-circle-o-down"></i>
+                    </span> -->
+                </div>
+                <!-- // c-state -->
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="c-state c-state--danger bg-card border-l-yellow ">
+                    <h3 class="c-state__title">Pixels Connected</h3>
+                    <h4 class="c-state__number u4"></h4>
+                    <!-- <p class="c-state__status">13% Decrease</p> -->
+                    <!-- <span class="c-state__indicator">
+                        <i class="fa fa-arrow-circle-o-up"></i>
+                    </span> -->
+                </div>
+                <!-- // c-state -->
+            </div>
+        </div>
+        <!-- // .row -->
+    </div>
+    <!-- ###################################################################################################### -->
+    <!-- <div class="container">
+        <div class="c-toolbar ">
+            <h3 class="c-toolbar__title">Your Analytics</h3>
+            <h5 class="c-toolbar__meta u-mr-auto" style="opacity:0;">7 Projects</h5>
+
+          
+        </div>
+    </div> -->
+
+
+    <!-- <div class="container"> -->
+
+    <!-- 
+        <div class="table-responsive">
+           
+        </div> -->
+    <!-- </div> -->
+
+    <!-- ###################################################################################################### -->
+    <div class="container">
+        <div class="row u-mb-large">
+            <div class="col-12">
+                <div class="c-table-responsive@desktop ">
+                    <table class="c-table" id="datatable">
+                        <caption class="c-table__title">
+                            Analytics
+                        </caption>
+                        <thead class="c-table__head c-table__head--slim">
+                            <tr class="c-table__row">
+                                <!-- <th class="c-table__cell c-table__cell--head no-sort">Favicon</th> -->
+                                <th class="c-table__cell c-table__cell--head">Date(DD/MM/YYYY)</th>
+
+                                <th class="c-table__cell c-table__cell--head no-sort">Short URL</th>
+                                <th class="c-table__cell c-table__cell--head" style="text-align:left">Clicks
+                                </th>
+                                <th class="c-table__cell c-table__cell--head no-sort">Tracking Pixels</th>
+
+                                <th class="c-table__cell c-table__cell--head">Short Url Type
+                                </th>
+
+
+                                <!-- <th class="c-table__cell c-table__cell--head">UTM Source</th>
+                                <th class="c-table__cell c-table__cell--head">UTM Medium
+                                </th>
+                                <th class="c-table__cell c-table__cell--head">UTM Name
+                                </th>
+                                <th class="c-table__cell c-table__cell--head">Date</th> -->
+                            </tr>
+                        </thead>
+
+
+                        <tbody class="appendtbdata">
+                            <!-- <img src="/userui/64.png" height="25" width="25"> -->
+
+                            <!-- <tr class="c-table__row">
+                                <td class="c-table__cell">
+                                    Tap.sr
+                                </td>
+                                <td class="c-table__cell">
+                                    <i class="fa fa-rocket overlapicon"></i>
+                                    <i class="fa fa-rocket overlapicon"></i>
+                                    <i class="fa fa-rocket overlapicon"></i>
+                                </td>
+
+                                <td class="c-table__cell">
+                                    Clicks</td>
+                                <td class="c-table__cell">
+                                </td>
+                                <td class="c-table__cell">
+                                </td>
+                                <td class="c-table__cell">
+                                </td>
+                                <td class="c-table__cell">
+                                </td>
+                            </tr> -->
+                            <% for(let i=0; i < shorturlsList.length; i++) { %>
+                                <tr class="c-table__row">
+
+                                    <td class="c-table__cell">
+                                        <p>
+                                            <%=shorturlsList[i].created_at%>
+
+                                        </p>
+
+                                    </td>
+                                    <td class="c-table__cell">
+
+
+                                        Tap.sr/
+                                        <%=shorturlsList[i].shortcode%>
+                                    </td>
+                                    <td class="c-table__cell">
+                                        <% if (shorturlsList[i].clicks) { %>
+
+                                            <p>
+                                                <%=shorturlsList[i].clicks%> Clicks
+
+                                            </p>
+                                            <% } else {%>
+
+                                                <p>
+                                                    0 Clicks
+
+                                                </p>
+                                                <% } %>
+
+                                    </td>
+
+
+
+                                    <td class="c-table__cell sorting">
+                                        <!-- <i class="fa fa-rocket overlapicon"></i>
+                                                                    <i class="fa fa-rocket overlapicon"></i> -->
+                                        <% if (shorturlsList[i].type === "instabio" ) { %>
+
+                                            <% for (let j = 0; j < shorturlsList[i].tracking.length; j++) {%>
+
+                                                <i style="font-size: 14px;" class="<%=shorturlsList[i].tracking[j].icon%>  overlapicon"></i>
+                                                <% } %>
+
+
+                                                    <% } %>
+
+                                    </td>
+
+                                    <td class="c-table__cell">
+
+
+                                        <%=shorturlsList[i].type%>
+                                    </td>
+
+
+
+                                </tr>
+                                <% } %>
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/userui/js/main.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="/userui/js/sortmobile.js"></script>
+    <!-- <script src="/userui/js/Croppie-master/croppie.min.js"></script> -->
+    <script src="/userui/js/bootstrap/bootstrap.min.js"></script>
+
+    <script src="/userui/js/Croppie-master/croppie.min.js"></script>
+    <script src="/userui/js/imagepreview.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+    <script>
+        function onLoad() {
+            gapi.load('auth2', function() {
+                gapi.auth2.init();
+            });
+        }
+
+        function signOut() {
+            let auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function() {});
+            auth2.disconnect();
+            window.location.href = "/login";
+        }
+    </script>
+    <script type="text/javascript">
+        $(function() {
+
+
+            let clientCount = <%-JSON.stringify(datedata) %>;
+            console.log(clientCount);
+
+
+
+
+
+        })
+    </script>
+
+
+
+
+
+
+</body>
+
+</html>

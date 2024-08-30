@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Biotree</title>
+    <meta name="description" content="Dashboard UI Kit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="stylesheet" href="https://use.typekit.net/foj0sle.css">
+
+    <link rel="stylesheet" href="/userui/bootstrap/bootstrap.min.css">
+    <link rel="shortcut icon" href="/userui/64.png" type="image/x-icon">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/userui/css/main.css">
+    <link rel="stylesheet" href="/userui/css/profile.css">
+    <link rel="stylesheet" href="/userui/css/responsive.css">
+    <link rel="stylesheet" href="/userui/css/colors.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
+    <!-- Stylesheet -->
+
+    <!-- <script src="js/app.js"></script> -->
+
+    <script type="text/javascript">
+        $(function () {
+            $('.getclientid').on("click", function () {
+                console.log("dumb ass");
+                let id = $(this).prev().val();
+                console.log(id);
+                let name = $(this).html();
+                name = name.trim();
+                console.log(name);
+                $('.printclientvalue').html(name);
+                $('clientid1').val(id);
+            });
+
+
+            // /////////////////////////////////////////
+            let one = <%- JSON.stringify(linkclicks)%>;
+            let two = <%- JSON.stringify(totallinkscreated)%>;
+            let three = <%- JSON.stringify(totallinkclikcs)%>;
+            let four = <%- JSON.stringify(pixelsconnected)%>;
+            $('.u1').html(one);
+            $('.u2').html(two);
+            $('.u3').html(three);
+            $('.u4').html(four);
+            let analytics = <%- JSON.stringify(clientsanalyticslist)%>;
+            console.log(analytics);
+
+            for (let index = 0; index < analytics.length; index++) {
+                const element = analytics[index];
+                let url = element.shorturl;
+                let icons = element.pixelsicons[index];
+                let clicks = element.clicks;
+                let source = element.source;
+                let medium = element.medium;
+                let name = element.name;
+                let date = element.date;
+                for (let index1 = 0; index1 < analytics[index].pixelsicons.length; index1++) {
+                    let see = analytics[index].pixelsicons[index1].icon;
+                    let listitemtoadd = makelist(url, see, clicks, source, medium, name, date);
+                    $('.appendtbdata').append(listitemtoadd);
+
+                }
+                // $('.appendtbdata').append(listitemtoadd);
+
+            }
+
+            function makelist(url, see, clicks, source, medium, name, date) {
+
+                console.log(see);
+                console.log(clicks);
+                let $alldata = '<tr class="c-table__row">' +
+                    '                                <td class="c-table__cell">' +
+                    '                                    Tap.sr' + url + '</td>' +
+                    '                                <td class="c-table__cell">' +
+                    '                                    <i class="' + see + ' overlapicon"></i>' +
+                    '                                    <i class="' + see + ' overlapicon"></i>' +
+                    '                                    <i class="' + see + ' overlapicon"></i>' +
+                    '                                </td>' +
+                    '                                <td class="c-table__cell">' + clicks + ' Clicks</td>' +
+                    '                                <td class="c-table__cell">' + source + '</td>' +
+                    '                                <td class="c-table__cell">' + medium + '</td>' +
+                    '                                <td class="c-table__cell">' + name + '</td>' +
+                    '                                <td class="c-table__cell">' + date + '</td>' +
+                    '                            </tr>';
+                return $alldata;
+            }
+
+
+        });
+    </script>
+    <style>
+        @import url("https://use.typekit.net/foj0sle.css");
+    </style>
+</head>
+
+<body>
+    <header class="c-navbar">
+        <a class="c-navbar__brand " href="index.html">
+            <img src="/userui/biotree_logo.png" alt="Dashboard's Logo">
+        </a>
+        <!-- Navigation items that will be collapes and toggle in small viewports -->
+        <nav class="c-nav collapse" id="main-nav">
+            <ul class="c-nav__list">
+                <!-- <li class="c-nav__item">
+                    <a class="c-nav__link" href="#!">Client Name</a>
+                </li> -->
+                <li class="c-nav__item">
+                    <div class="c-dropdown dropdown">
+                        <a class="u-text-mute u-text-small dropdown-toggle printclientvalue" href="#" id="dropdwonMenuProjects"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <%= clientsList[0].name %>
+                        </a>
+                        <i class="u-ml-xsmall fa fa-angle-down"></i>
+                        <input id="clientid" class="clientid1" type="text" style="display:none" value="<%=clientsList[0]._id%>">
+
+                        <div class="c-dropdown__menu dropdown-menu here" aria-labelledby="dropdwonMenuProjects" style="padding-bottom: 0;padding-top: 0;">
+
+                            <%if (client_count > 0) { %>
+
+                            <% for(let i=0; i < clientsList.length; i++) { %>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="text" value="<%=clientsList[i]._id%>" id="clientlist" style="display: none">
+                                    <a class="c-dropdown__item  text-center getclientid" href="#!">
+                                        <%= clientsList[i].name %>
+                                    </a>
+                                </div>
+                                <!-- <div class="col-md-2" style="padding:0">
+
+                                    <a id="updateclient" onclick="updateClient('<%=clientsList[i].name%>','<%=clientsList[i]._id%>','<%= JSON.stringify(clientsList[i].tracking) %>')"
+                                        class="u-p-zero dropdownhover" style="position:relative;top:8px;right:8px;"
+                                        data-toggle="modal" data-target="#modal10">
+                                        <i class="fa fa-cog" aria-hidden="true"></i>
+                                    </a>
+                                </div> -->
+                            </div>
+                            <% } %>
+                            <% } %>
+                            <a class="c-dropdown__item newproject" href="#!" style="color:#fff;
+background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);text-align: center"
+                                data-toggle="modal" data-target="#modal7">Add New Client
+                            </a>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="c-nav__item">
+
+                </li>
+            </ul>
+        </nav>
+        <!-- // Navigation items  -->
+
+        <div class="c-dropdown u-ml-auto dropdown">
+            <a class="c-avatar c-avatar--xsmall has-dropdown dropdown-toggle" href="#" id="dropdwonMenuAvatar"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <!-- <img class="c-avatar__img" src="./64.png" alt="User's Profile Picture"> -->
+                <i class="fa fa-user" aria-hidden="true" style="font-size:25px;color:grey"></i>
+
+            </a>
+
+            <div class="c-dropdown__menu dropdown-menu dropdown-menu-right" aria-labelledby="dropdwonMenuAvatar">
+                <a class="c-dropdown__item dropdown-item" href="profile.html"> Profile</a>
+                <a class="c-dropdown__item dropdown-item" href="#">LogOut</a>
+                <!-- <a class="c-dropdown__item dropdown-item" href="#">Manage Roles</a> -->
+            </div>
+        </div>
+
+        <button class="c-nav-toggle" type="button" data-toggle="collapse" data-target="#main-nav">
+            <span class="c-nav-toggle__bar"></span>
+            <span class="c-nav-toggle__bar"></span>
+            <span class="c-nav-toggle__bar"></span>
+        </button><!-- // .c-nav-toggle -->
+    </header>
+
+    <div class="container">
+        <div class="row u-mt-medium">
+            <div class="col-sm-6 col-lg-3">
+                <div class="c-state gmd-4">
+                    <h3 class="c-state__title">Links Clicks (Last 30 Days)</h3>
+                    <h4 class="c-state__number u1"></h4>
+                    <!-- <p class="c-state__status">13% Increase</p> -->
+                    <!-- <span class="c-state__indicator">
+                        <i class="fa fa-arrow-circle-o-down"></i>
+                    </span> -->
+                </div><!-- // c-state -->
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="c-state c-state--success gmd-4">
+                    <h3 class="c-state__title"> Total Links Created</h3>
+                    <h4 class="c-state__number u2"></h4>
+                    <!-- <p class="c-state__status">4% Increase</p> -->
+                    <!-- <span class="c-state__indicator">
+                        <i class="fa fa-arrow-circle-o-up"></i>
+                    </span> -->
+                </div><!-- // c-state -->
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="c-state c-state--warning gmd-4">
+                    <h3 class="c-state__title"> Total Link Clicks</h3>
+                    <h4 class="c-state__number u3"></h4>
+                    <!-- <p class="c-state__status">21% Decrease</p> -->
+                    <!-- <span class="c-state__indicator">
+                        <i class="fa fa-arrow-circle-o-down"></i>
+                    </span> -->
+                </div><!-- // c-state -->
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="c-state c-state--danger gmd-4">
+                    <h3 class="c-state__title">Pixels Connected</h3>
+                    <h4 class="c-state__number u4"></h4>
+                    <!-- <p class="c-state__status">13% Decrease</p> -->
+                    <!-- <span class="c-state__indicator">
+                        <i class="fa fa-arrow-circle-o-up"></i>
+                    </span> -->
+                </div><!-- // c-state -->
+            </div>
+        </div><!-- // .row -->
+    </div>
+    <!-- ###################################################################################################### -->
+    <!-- <div class="container">
+        <div class="c-toolbar gmd-4">
+            <h3 class="c-toolbar__title">Your Analytics</h3>
+            <h5 class="c-toolbar__meta u-mr-auto" style="opacity:0;">7 Projects</h5>
+
+          
+        </div>
+    </div> -->
+    <!-- ###################################################################################################### -->
+    <div class="container">
+        <div class="row u-mb-large">
+            <div class="col-12">
+                <div class="c-table-responsive@desktop gmd-4">
+                    <table class="c-table" id="datatable">
+                        <caption class="c-table__title">
+                            Analytics
+                        </caption>
+                        <thead class="c-table__head c-table__head--slim">
+                            <tr class="c-table__row">
+                                <!-- <th class="c-table__cell c-table__cell--head no-sort">Favicon</th> -->
+                                <th class="c-table__cell c-table__cell--head no-sort">Short URL</th>
+                                <th class="c-table__cell c-table__cell--head no-sort">Pixels</th>
+                                <th class="c-table__cell c-table__cell--head" style="text-align:left">Clicks
+                                </th>
+                                <th class="c-table__cell c-table__cell--head">UTM Source</th>
+                                <th class="c-table__cell c-table__cell--head">UTM Medium
+                                </th>
+                                <th class="c-table__cell c-table__cell--head">UTM Name
+                                </th>
+                                <th class="c-table__cell c-table__cell--head">Date</th>
+                            </tr>
+                        </thead>
+                        <% for(let i=0; i < clientsanalyticslist.length; i++) { %>
+                        <% for (let j = 0; j < clientsanalyticslist[i].pixelsicons.length; j++) {%>
+
+                        <p>
+                            <%=clientsanalyticslist[i].pixelsicons[j].icon%>
+                        </p>
+                        <% } %>
+
+                        <% } %>
+
+                        <tbody class="appendtbdata">
+                            <!-- <img src="/userui/64.png" height="25" width="25"> -->
+
+                            <!-- <tr class="c-table__row">
+                                <td class="c-table__cell">
+                                    Tap.sr
+                                </td>
+                                <td class="c-table__cell">
+                                    <i class="fa fa-rocket overlapicon"></i>
+                                    <i class="fa fa-rocket overlapicon"></i>
+                                    <i class="fa fa-rocket overlapicon"></i>
+                                </td>
+
+                                <td class="c-table__cell">
+                                    Clicks</td>
+                                <td class="c-table__cell">
+                                </td>
+                                <td class="c-table__cell">
+                                </td>
+                                <td class="c-table__cell">
+                                </td>
+                                <td class="c-table__cell">
+                                </td>
+                            </tr> -->
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/userui/js/main.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="/userui/js/sortmobile.js"></script>
+    <!-- <script src="/userui/js/Croppie-master/croppie.min.js"></script> -->
+    <script src="/userui/js/bootstrap/bootstrap.min.js"></script>
+
+    <script src="/userui/js/Croppie-master/croppie.min.js"></script>
+    <script src="/userui/js/imagepreview.js"></script>
+
+
+
+
+
+
+</body>
+
+</html>

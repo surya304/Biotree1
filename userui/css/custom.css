@@ -1,0 +1,132 @@
+ul.breadcrumb1 {
+    padding: 10px 24px;
+    list-style: none;
+    border-radius: 10px;
+    width: 50%;
+    margin: 0;
+    margin-top: 4px;
+}
+
+ul.breadcrumb1 li {
+    display: inline;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.inactive {
+    color: grey;
+    font-weight: 600;
+}
+
+.inactive:hover {
+    color: #3e4095;
+    font-weight: 600;
+}
+
+ul.breadcrumb1 li+li:before {
+    padding: 4px;
+    color: #b1b1b1;
+    content: "›";
+    vertical-align: top;
+    font-size: 22px;
+    line-height: 20px;
+    padding: 0px 10px;
+}
+
+ul.breadcrumb1 li a {
+    /* color: #0f4882; */
+    text-decoration: none;
+}
+
+ul.breadcrumb1 li a.active {
+    text-decoration: none;
+    font-weight: bold;
+    color: #4780E7;
+}
+
+ul.breadcrumb1 li a:hover {
+    /* color: #01447e; */
+    text-decoration: underline;
+}
+
+.bg_vdc {
+    background-color: #0C4482;
+    border-radius: 30px !important;
+    /* margin-left: 40%; */
+    /* float: left; */
+    /* margin: auto; */
+}
+
+
+/* FIXME SWAL Custom button */
+
+.customSwalBtn {
+    background-color: rgba(214, 130, 47, 1.00);
+    border-left-color: rgba(214, 130, 47, 1.00);
+    border-right-color: rgba(214, 130, 47, 1.00);
+    border: 0;
+    border-radius: 3px;
+    box-shadow: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+    margin: 30px 5px 0px 5px;
+    padding: 10px 32px;
+}
+
+
+/* FIXME modal fade style */
+
+.modal-backdrop21 {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    z-index: 1040;
+    /* background-color: #000; */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 1)), to(rgba(0, 0, 0, 0)));
+    opacity: 2;
+}
+
+
+/* FIXME copy button  */
+
+.tooltip1 {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip1 .tooltiptext1 {
+    visibility: hidden;
+    width: 140px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip1 .tooltiptext1::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip1:hover .tooltiptext1 {
+    visibility: visible;
+    opacity: 1;
+}

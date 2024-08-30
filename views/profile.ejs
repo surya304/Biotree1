@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>profile page</title>
+    <meta name="description" content="Dashboard UI Kit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-signin-client_id" content="347643143038-1poc0bhn688aug03hpjlq89r6c6o1bau.apps.googleusercontent.com">
+
+    <link rel="stylesheet" href="https://use.typekit.net/foj0sle.css">
+
+
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="shortcut icon" href="./64.png" type="image/x-icon">
+
+    <link rel="stylesheet" href="/userui/bootstrap/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/userui/css/main.css">
+    <link rel="stylesheet" href="/userui/css/profile.css">
+    <script src=" https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
+    </script>
+
+    <style>
+        @import url(" https://use.typekit.net/foj0sle.css");
+    </style>
+
+
+</head>
+
+<body>
+    <header class="navbar navbar-static-top" style="border-bottom: 2px solid #fff;background-color: #fff;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/dashboard">
+                    <img src="/userui/biotree_logo.png" alt="Dashboard's Logo" style="height: 30px;">
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-user" aria-hidden="true" style="font-size:25px;color:grey"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/profile">Profile</a></li>
+                            <li><a href="/logout" onclick="signOut();">Sign out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+
+
+    <br>
+
+
+
+    <!-- ########################################################################################################## -->
+
+    <div class="container">
+        <div class="g-signin2" data-onsuccess="onSignIn" style="width: 1px;opacity: 0;"> </div>
+
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="" style="background:#fff;padding: 2rem;border-radius: 5px;">
+                    <!-- *********************************************************** -->
+                    <!--  -->
+                    <div class="row u-pb-small">
+                        <div class="col-md-12 text-center">
+                            <h3>Your Profile</h3>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- *********************************************************** -->
+
+                    <div class="row u-mt-small u-mb-small">
+                        <div class="col-md-6 col-4 text-left">
+                            <label class="head" for="email">Name</label>
+
+                        </div>
+                        <div class="col-md-6 col-8 ">
+                            <form style="margin-top: 5px;">
+                                <div class="input-group">
+                                    <input id="msg" type="text" class="form-control getprofile" name="msg" placeholder="Place Your Name Here" value="<%=profilename%>">
+                                    <span class="input-group-addon btn-color updateprofile" style="cursor: pointer">Update</span>
+
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+                    <!-- *********************************************************** -->
+
+                    <div class="row u-mb-small">
+                        <div class="col-md-6 col-4 text-left">
+                            <label class=" head " for=" email">Email</label>
+
+                        </div>
+                        <div class="col-md-6 col-8">
+                            <label class="head " for="email"><%=email%></label>
+
+                        </div>
+                    </div>
+
+                    <!-- *********************************************************** -->
+
+                    <div class="row u-mb-small">
+                        <div class="col-md-6 col-4 text-left">
+                            <label class="head " for="email">Password</label>
+
+                        </div>
+                        <% if (	is_social == true) { %>
+
+
+
+                            <div class="col-md-6 col-8">
+                                <button type="button" class="c-btn defaultcolor u-mt-small " data-toggle="modal" data-target="#socialpassword" style="border:none">
+                                        Set Password
+                                    </button>
+                            </div>
+                            <% } else { %>
+
+                                <div class="col-md-6 col-8">
+                                    <button type="button" class="c-btn defaultcolor u-mt-small " data-toggle="modal" data-target="#modal7" style="border:none">
+                                        Change Password
+                                    </button>
+                                </div>
+
+                                <% } %>
+
+
+                    </div>
+
+
+
+
+                    <!-- *********************************************************** -->
+
+
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+
+        </div>
+    </div>
+
+
+
+
+    <!-- ########################################################################################################## -->
+
+    <!-- <div class="col-sm-4 u-mb-medium "> -->
+    <!-- Button trigger modal -->
+    <!-- <button type="button" class="c-btn c-btn--success" data-toggle="modal" data-target="#modal7">
+				edit profile
+			</button> -->
+
+    <!-- Modal -->
+    <% if (	is_social == false) { %>
+
+        <div class="c-modal c-modal--xsmall modal fade" id="modal7" tabindex="-1" role="dialog" aria-labelledby="modal7" data-backdrop="static">
+            <div class="c-modal__dialog modal-dialog" role="document">
+                <div class="c-modal__content">
+
+                    <div class="c-modal__header" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);">
+                        <h3 class="c-modal__title">Edit Profile</h3>
+
+                        <span class="c-modal__close" data-dismiss="modal" aria-label="Close">
+						<i class="fa fa-close"></i>
+					</span>
+                    </div>
+                    <div class="c-modal__body">
+                        <div class="c-field u-mb-small">
+                            <label class="c-field__label" for="select12">Current Password *</label>
+                            <input class="c-input" type="password" placeholder="Enter your current password" id="currentpassword">
+                            <div class="invalid-feedback u-color-danger" id="currentpassword-err"></div>
+
+                        </div>
+                        <div class="c-field u-mb-medium">
+                            <label class="c-field__label" for="select12">New  Password *</label>
+                            <input class="c-input" type="password" placeholder="Enter Your New Password" id="newpassword">
+                            <div class="invalid-feedback u-color-danger" id="newpassword-err"></div>
+
+                        </div>
+
+                        <a class="c-btn c-btn--success c-btn--fullwidth" id="send-password" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);color:#fff;">
+						save
+					</a>
+                    </div>
+
+                </div>
+                <!-- // .c-modal__content -->
+            </div>
+            <!-- // .c-modal__dialog -->
+        </div>
+        <% } else { %>
+
+
+            <div class="c-modal c-modal--xsmall modal fade" id="socialpassword" tabindex="-1" role="dialog" aria-labelledby="socialpassword" data-backdrop="static">
+                <div class="c-modal__dialog modal-dialog" role="document">
+                    <div class="c-modal__content">
+
+                        <div class="c-modal__header" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);">
+                            <h3 class="c-modal__title">Edit Profile</h3>
+
+                            <span class="c-modal__close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa fa-close"></i>
+                        </span>
+                        </div>
+                        <div class="c-modal__body">
+                            <div class="c-field u-mb-small">
+                                <label class="c-field__label" for="select12">Add Password *</label>
+                                <input class="c-input" type="password" placeholder="Enter your current password" id="d-pass">
+                                <div class="invalid-feedback u-color-danger" id="d-pass-err"></div>
+
+                            </div>
+
+
+                            <a class="c-btn c-btn--success c-btn--fullwidth" id="send-social" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);color:#fff;">
+                            save
+                        </a>
+                        </div>
+
+                    </div>
+                    <!-- // .c-modal__content -->
+                </div>
+                <!-- // .c-modal__dialog -->
+            </div>
+            <!-- // .c-modal -->
+            <!-- </div> -->
+            <% } %>
+
+
+                <!-- </div> -->
+
+                <!-- /section -->
+                <script src="/userui/js/main.min.js"></script>
+                <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+                <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+         
+                <script type="text/javascript">
+                    $(function() {
+
+
+
+                        function currentpassword1() {
+                            let password = $("#currentpassword").val().length;
+
+                            if (password == "") {
+                                $("#currentpassword-err").html('<i class="fa fa-times-circle"></i>Please Enter the  Password');
+                                $("#currentpassword-err").show();
+
+                                currentpassword = true;
+
+                            } else {
+                                $("#currentpassword-err").hide();
+                            }
+
+                        }
+
+                        function newpassword1() {
+                            let password = $("#newpassword").val().length;
+
+                            if (password == "") {
+                                $("#newpassword-err").html('<i class="fa fa-times-circle"></i>Please Enter the Password');
+                                $("#newpassword-err").show();
+
+                                newpassword = true;
+
+                            } else {
+                                $("#newpassword-err").hide();
+                            }
+
+                        }
+                        $("#currentpassword").focusout(function() {
+                            currentpassword1();
+
+                        });
+                        $("#newpassword").focusout(function() {
+                            newpassword1();
+
+                        });
+                        $("#send-password").on("click", function() {
+                            currentpassword1();
+                            newpassword1();
+                            currentpassword = false;
+                            newpassword = false;
+                            if (currentpassword == false && newpassword == false) {
+                                runlogin();
+                            } else {
+                                return false;
+                            }
+                        });
+
+                        function cpass() {
+                            let password = $("#d-pass").val().length;
+
+                            if (password == "") {
+                                $("#d-pass-err").html('<i class="fa fa-times-circle"></i>Please Enter the Password');
+                                $("#d-pass-err").show();
+                                socialpasswordboolean = true;
+                            } else {
+                                $("#d-pass-err").hide();
+                            }
+
+                        }
+                        $("#send-social").on("click", function() {
+                            cpass();
+                            socialpasswordboolean = false;
+                            if (socialpasswordboolean == false) {
+                                socialpassword();
+                            } else {
+                                return false;
+                            }
+                        });
+
+                        function socialpassword() {
+                            let password = $("#d-pass").val();
+                            let obj = {};
+                            obj.password = password;
+                            obj.is_social = false;
+                            obj.tap_account = true;
+
+
+                            $.ajax({
+                                type: 'POST',
+                                data: obj,
+                                url: '/changesocialpassword',
+                                success: function(data) {
+
+                                    swal(
+                                        'Great!',
+                                        "password Has been changeed",
+                                        'success'
+                                    );
+
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    swal("Oops...",
+                                        "Oops! Please try again ",
+                                        "error");
+
+                                }
+                            });
+
+                        }
+
+
+                        function runlogin() {
+                            let currpass = $("#currentpassword").val();
+                            let newpass = $("#newpassword").val();
+                            let obj = {};
+                            obj.currentpassword = currpass;
+                            obj.newpassword = newpass;
+                            $.ajax({
+                                type: 'POST',
+                                data: obj,
+                                url: '/changepwd',
+                                success: function(data) {
+
+                                    swal(
+                                        'Great!',
+                                        "password Has been changeed",
+                                        'success'
+                                    );
+
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    // alert(textStatus + errorThrown);
+                                    console.log(XMLHttpRequest);
+                                    console.log(textStatus);
+                                    console.log(errorThrown);
+
+                                }
+                            });
+                        }
+
+                        $('.updateprofile').on("click", function() {
+                            let profilename = $('.getprofile').val();
+                            console.log(profilename);
+                            let obj = {
+
+                            }
+                            obj.profilename = profilename;
+                            console.log(obj);
+                            $.ajax({
+                                type: 'PUT',
+                                data: obj,
+                                url: '/profilenamechange',
+                                success: function(data) {
+
+                                    swal(
+                                        'Great!',
+                                        data.data,
+                                        'success'
+                                    );
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    alert(textStatus + errorThrown)
+                                }
+                            });
+                        });
+
+                    })
+                </script>
+
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Reset Password | Dashboard UI Kit</title>
+    <meta name="description" content="Dashboard UI Kit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/userui/64.png" type="image/x-icon">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" href="/userui/apple-touch-icon.png">
+
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="/userui/css/main.min.css">
+</head>
+
+<body class="o-page o-page--center">
+    <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+
+
+
+    <div class="o-page__card">
+
+        <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+        <div class="c-card u-mb-xsmall">
+            <header class="c-card__header u-pt-small" style="background: #4780E7; color: #fff;
+        text-decoration: none;">
+                <a class="c-card__icon" href="#!" style="background: #fff;padding:8px">
+                    <img src="/userui/180.png" alt="Dashboard UI Kit">
+                </a>
+                <br>
+                <h1 class="u-h3" style="color:#fff;text-align: center">Reset your password</h1>
+
+            </header>
+
+            <form class="c-card__body">
+
+                <div class="c-field u-mb-small">
+                    <label class="c-field__label" for="input1">Your New Password</label>
+                    <input class="c-input" type="password" id="input1" placeholder="Password">
+                    <small class="c-field__message u-color-danger " id="password_error_message" style="display:none">
+                        <i class="fa fa-times-circle"></i>
+                    </small>
+                    <label class="container41 ml-2">
+                                
+                        <span style="color:#3e4095;font-size: 16px;">
+                                Show Password
+                        </span> 
+                        <input type="checkbox" class="checkit" onclick="myFunction81()">
+    
+                        <span class="checkmark" ></span>
+                       
+    
+                    </label>
+                </div>
+
+                <div class="c-field u-mb-small">
+                    <label class="c-field__label" for="input2">Confirm Password</label>
+                    <input class="c-input" type="password" id="input2" placeholder="Re-enter Password">
+                    <small class="c-field__message u-color-danger " id="retype_password_error_message" style="display:none">
+                        
+                    </small>
+                    <label class="container41 ml-2">
+                                
+                        <span style="color:#3e4095;font-size: 16px;">
+                                Show Password
+                        </span> 
+                        <input type="checkbox" class="checkit" onclick="myFunction91()">
+    
+                        <span class="checkmark" ></span>
+                       
+    
+                    </label>
+                </div>
+
+
+                <a class="c-btn btn-color c-btn--fullwidth u-mt-small sendit" id="password-validation" style="background: #4780E7;
+            color: #fff;text-decoration: none;border:0">Submit </a>
+            </form>
+        </div>
+    </div>
+
+    <script src="/userui/js/main.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script type="text/javascript">
+        function myFunction81() {
+            let x = document.getElementById("input1");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+
+        function myFunction91() {
+            let x = document.getElementById("input2");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+        $(function() {
+
+
+            function check_password() {
+
+                let password_length = $("#input1").val().length;
+
+                if (password_length < 5) {
+                    $("#password_error_message").html(' <i class="fa fa-times-circle"></i> Please Enter At least 5 characters');
+                    $("#password_error_message").show();
+                    error_password = true;
+                } else {
+                    $("#password_error_message").hide();
+                }
+
+            }
+
+            function check_retype_password() {
+
+
+                let password = $("#input1").val();
+                let retype_password = $("#input2").val();
+
+
+                if (password != retype_password) {
+                    $("#retype_password_error_message").html(' <i class="fa fa-times-circle"></i> Passwords dont match ');
+                    $("#retype_password_error_message").show();
+                    error_retype_password = true;
+                } else {
+                    $("#retype_password_error_message").hide();
+                }
+
+            }
+
+            $.urlParam = function(name) {
+                let results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location
+                    .href);
+                if (results == null) {
+                    return null;
+                }
+                return decodeURI(results[1]) || 0;
+            }
+
+            $("#password-validation").on("click", function() {
+
+                error_password = false;
+                error_retype_password = false;
+                check_password();
+                check_retype_password();
+
+                if (error_password == false && error_retype_password ==
+                    false) {
+                    confirmthat();
+                } else {
+                    return false;
+                }
+
+
+
+
+            });
+
+
+            $("#input1").focusout(function() {
+
+                check_password();
+
+            });
+
+            $("#input2").focusout(function() {
+
+                check_retype_password();
+
+            });
+
+
+
+
+
+            function confirmthat() {
+
+
+                let objotp = {};
+
+
+
+                let password = $("#input1").val();
+                let retype_password = $("#input2").val();
+                console.log(password);
+                console.log(retype_password);
+                objotp.password = password;
+                objotp.newpassword = retype_password;
+
+
+
+                let key = $.urlParam('key');
+                objotp.key = key;
+
+
+                console.log(objotp);
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "/forgotpassword",
+                    data: objotp,
+                    success: function(data) {
+                        swal("Great",
+                            "You have successfully Updated Your Password.",
+                            "success");
+                        // window.location.href = '/create-shorturl';
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        console.log(XMLHttpRequest);
+                        console.log(textStatus);
+                        console.log(errorThrown);
+
+                    }
+                });
+
+
+
+
+            }
+
+
+
+
+        })
+    </script>
+
+
+</body>
+
+</html>

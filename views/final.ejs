@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>biotree.one</title>
+    <link rel="stylesheet" href="/userui/css/main.min.css">
+    <link rel="stylesheet" href="/userui/css/save.css">
+    <link rel="stylesheet" href="/userui/css/colors.css">
+    <link href="https://fonts.googleapis.com/css?family=Prompt" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <style>
+        @import url("https://use.typekit.net/foj0sle.css");
+    </style>
+</head>
+<body id="<%=backgroundcolor%>">
+    <div class="contain" id="myNavbar">
+        <div class="phonebody-internal1 thing">
+            <div class="flex-image">
+                <% if (clientimage) { %>
+                    <div><img class="roundimage mx-auto d-block" src="<%=clientimage%>" /></div>
+                <% } %>
+            </div>
+            <div class="flex-name"><div><%=name%></div></div>
+            <div class="flex-bio"><div><%=bio%></div></div>
+            <div class="button-area rectangle"></div>
+            <div class="button-area1 rectangle">
+                <% links.forEach(function(link) { %>
+                    <a href="<%=link.link%>"><%=link.title%></a>
+                <% }); %>
+            </div>
+            <div class="flex-name1">
+                <div>
+                    <span style="color:#fff">Powered by</span>
+                    <img src="/userui/biotree_logo.png" class="e1">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            let shortcode = <%- JSON.stringify(shortcode) %>;
+            let previewcolor = <%- JSON.stringify(backgroundcolor) %>;
+            let bordering = <%- JSON.stringify(border) %>;
+            let socialmediaList = <%- JSON.stringify(socialmediaList) %>;
+            let sociallists = <%- JSON.stringify(sociallists) %>;
+            let fromdata = <%- JSON.stringify(from) %>;
+
+            if (previewcolor !== "purewhite") {
+                $('.flex-name, .flex-bio, .button-area, .button-area1, .flex-name1, .e1').addClass('white');
+            } else {
+                $('.flex-name, .flex-bio, .button-area, .button-area1, .flex-name1').addClass('black');
+            }
+
+            if (bordering) {
+                $('.button-area, .button-area1').removeClass('rectangle').addClass('rounded');
+            } else {
+                $('.button-area, .button-area1').removeClass('rounded').addClass('rectangle');
+            }
+
+            if (fromdata === "instabio") {
+                sociallists.forEach(function(social) {
+                    let finalurl = social.url + social.username;
+                    let listItemToAdda = `<a href="${finalurl}"><i class="${social.icon}" data-id="${social.id}"></i></a>`;
+                    $('.button-area').append(listItemToAdda);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

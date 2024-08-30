@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Biotree Dashboard</title>
+    <meta name="description" content="Dashboard UI Kit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-signin-client_id" content="347643143038-1poc0bhn688aug03hpjlq89r6c6o1bau.apps.googleusercontent.com">
+    <link rel="stylesheet" href="https://use.typekit.net/foj0sle.css">
+    <link rel="stylesheet" href="/userui/bootstrap/bootstrap.min.css">
+
+    <link rel="shortcut icon" href="/userui/64.png" type="image/x-icon">
+
+    <!-- Stylesheet -->
+    <!-- <link rel="stylesheet" href="/userui/js/bootstrap-tour-0.12.0//build/css/bootstrap-tour-standalone.min.css"> -->
+    <link rel="stylesheet" href="/userui/css/main.css">
+    <link rel="stylesheet" href="/userui/css/loadingcart.css">
+
+    <link rel="stylesheet" href="/userui/css/profile.css">
+    <link rel="stylesheet" href="/userui/css/responsive.css">
+    <link rel="stylesheet" href="/userui/css/colors.css">
+    <link rel="stylesheet" href="/userui/css/custom.css">
+    <link rel="stylesheet" href="/userui/css/success.css">
+
+
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+
+    <style>
+        @import url("https://use.typekit.net/foj0sle.css");
+    </style>
+    <style media="screen">
+        /* .tooltip1 {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip1 .tooltiptext1 {
+            visibility: hidden;
+            width: 140px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -75px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip1 .tooltiptext1::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        
+        .tooltip1:hover .tooltiptext1 {
+            visibility: visible;
+            opacity: 1;
+        } */
+    </style>
+</head>
+
+<body>
+    <header class="navbar navbar-static-top" style="border-bottom: 2px solid #fff;background-color: #fff;">
+           <div class="container-fluid">
+               <div class="navbar-header">
+                   <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+                       <span class="sr-only">Toggle navigation</span>
+                       <span class="icon-bar"></span>
+                       <span class="icon-bar"></span>
+                       <span class="icon-bar"></span>
+                   </button>
+                   <a class="navbar-brand" href="/dashboard">
+                       <img src="/userui/biotree_logo.png" alt="Dashboard's Logo" style="height: 30px;">
+                   </a>
+               </div>
+   
+               <div class="collapse navbar-collapse" id="navbar-collapse">
+                   <ul class="nav navbar-nav navbar-right">
+                       <li class="dropdown">
+                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                               <i class="fa fa-user" aria-hidden="true" style="font-size:25px;color:grey"></i>
+                           </a>
+                           <ul class="dropdown-menu">
+                               <li><a href="/profile">Profile</a></li>
+                               <li><a href="/logout" onclick="signOut();">Sign out</a></li>
+                           </ul>
+                       </li>
+                   </ul>
+               </div>
+           </div>
+       </header>
+
+
+
+
+
+    <div class="c-modal c-modal--xsmall modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal" data-backdrop="static">
+        <div class="c-modal__dialog modal-dialog " role="document" style="max-width:590px;">
+            <div class="c-modal__content">
+                <div class="c-modal__header" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);">
+                    <h3 class="c-modal__title">Clients</h3>
+                    <span class="c-modal__close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close"></i>
+                    </span>
+                </div>
+                <div class="c-modal__body">
+                    <div class="c-field u-mb-small text-center">
+                        <h4> Please note : All the bio links for this client will be deleted </h5>
+                    </div>
+                    <!--  -->
+                    <div class="pull-right">
+                        <a class="c-btn c-btn--large" data-dismiss="modal" href="#" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);color:#fff;">
+                            Yes
+                        </a>
+                        <a class="c-btn c-btn--large" data-dismiss="modal" href="#" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);color:#fff;">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            <!-- // .c-modal__content -->
+        </div>
+        <!-- // .c-modal__dialog -->
+    </div>
+
+    <!-- ############################################ -->
+    <!-- FIXME UPDATE CLIENT MODAL -->
+    <div class="c-modal c-modal--xsmall modal fade" id="modal10" tabindex="-1" role="dialog" aria-labelledby="modal10" data-backdrop="static">
+        <div class="c-modal__dialog modal-dialog " role="document" style="max-width:590px;">
+            <div class="c-modal__content">
+                <div class="c-modal__header" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);">
+                    <h3 class="c-modal__title">Add / Edit Client & Tracking pixels</h3>
+                    <span class="c-modal__close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close"></i>
+                    </span>
+                </div>
+                <div class="c-modal__body dynamic" style="height:500px;overflow: auto">
+                    <div class="c-field u-mb-xsmall d1e ">
+                        <label class="c-field__label " for="select12">Client Name</label>
+                        <input class="c-input q0e" type="text">
+                    </div>
+
+
+                    <div class="c-field u-mb-medium">
+                        <div class="row">
+                            <div class="col-sm-6 ">
+                                <label class="c-field__label" for="select12" style="padding-top:9px">Tracking
+                                    pixels</label>
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                <div class="c-dropdown dropdown">
+                                    <button class="c-btn outline has-add dropdown-toggle c-btn-block dropit " id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-align:right">Add
+                                        New</button>
+                                    <div class="c-dropdown__menu dropdown-menu dropdown-menu-right c-dropdown__menu--large-custom droppingeditclient" style="height:300px;overflow: scroll;margin-top:100px;" aria-labelledby="dropdownMenuButton" id="dropdown">
+                                        <!-- style="height:480px;overflow: scroll;margin-top: 100px;" -->
+
+                                        <% for(let i=0; i < trackingList.length; i++) { %>
+
+                                            <a class="c-dropdown__item dropdown-item form-check form-check-inline update-add-client" href="#" style="padding:4px 0 0 5px;" data-name="<%=trackingList[i].prefixname%>" data-icon="<%=trackingList[i].icon%>" data-id="<%=trackingList[i]._id%>">
+                                                <label class="iconbox1">
+                                                <i class="<%=trackingList[i].icon%>" id="dropdownicon"></i>
+                                            </label>
+
+                                                <label class="form-check-label mx-auto" for="inlineCheckbox1" style="margin-left:8px;font-size:14px;font-weight: 100;position: relative;color:black">
+                                                <%=trackingList[i].name%></label>
+
+                                            </a>
+                                            <% } %>
+                                    </div>
+                                </div>
+                                <!-- #####################################################dropdown end -->
+                            </div>
+
+                        </div>
+                        <div class="bron">
+                            <ul id="update-client-list" class="sort">
+
+                            </ul>
+
+                        </div>
+
+                        <!-- #######################################################end popover -->
+                    </div>
+
+
+                    <a class="c-btn c-btn--success c-btn--fullwidth get-updated-data" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);color:#fff;" id="">
+                        Save
+                    </a>
+                    <a class="c-btn c-btn--fullwidth u-mt-small delete-client" style="text-align:center;color: red;" id="" data-dismiss="modal"> Delete Client</a>
+                </div>
+
+            </div>
+            <!-- // .c-modal__content -->
+        </div>
+        <!-- // .c-modal__dialog -->
+    </div>
+    <!-- // .c-modal -->
+    <!-- ###################################################################### -->
+
+    <!-- deletemod -->
+    <!--  FIXME ADD CLIENT MODAL-->
+    <div class="c-modal c-modal--xsmall modal fade model" id="modal7" tabindex="-1" role="dialog" aria-labelledby="modal7" data-backdrop="static">
+        <div class="c-modal__dialog modal-dialog " role="document" style="max-width:590px;">
+            <div class="c-modal__content">
+                <div class="c-modal__header" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);">
+                    <h3 class="c-modal__title">Add New Client</h3>
+                    <span class="c-modal__close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close" style="color:#fff"></i>
+                    </span>
+                </div>
+                <div class="c-modal__body" style="height:500px;overflow: scroll">
+                    <div class="c-field u-mb-xsmall d1d">
+                        <label class="c-field__label " for="select12">Client Name</label>
+                        <input id="clientname" class="c-input q0d" type="text">
+                        <span class="alert-danger disit" style="display:none">please Enter the URL here</span>
+                    </div>
+
+                    <div class="c-field u-mb-medium">
+                        <div class="row">
+                            <div class="col-sm-6 ">
+                                <label class="c-field__label" for="select12" style="padding-top:9px">Tracking
+                                    pixels</label>
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                <div class="c-dropdown dropdown">
+                                    <button class="c-btn outline has-add dropdown-toggle c-btn-block dropit " id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-align:right">Add
+                                        New</button>
+                                    <div class="c-dropdown__menu dropdown-menu dropdown-menu-right c-dropdown__menu--large-custom add-full-track" style="height:300px;overflow: scroll;margin-top:100px;" aria-labelledby="dropdownMenuButton" id="dropdown">
+                                        <!-- style="height:480px;overflow: scroll;margin-top: 100px;" -->
+
+                                        <% for(let i=0; i < trackingList.length; i++) { %>
+
+                                            <a class="c-dropdown__item dropdown-item form-check form-check-inline add-track-indi" href="#" style="padding:4px 0 0 5px;" data-name="<%=trackingList[i].prefixname%>" data-icon="<%=trackingList[i].icon%>" data-id="<%=trackingList[i]._id%>">
+                                                <label class="iconbox1">
+                                                <i class="<%=trackingList[i].icon%>" id="dropdownicon"></i>
+                                            </label>
+
+                                                <label class="form-check-label mx-auto" for="inlineCheckbox1" style="margin-left:8px;font-size:14px;font-weight: 100;position: relative;color:black">
+                                                <%=trackingList[i].name%></label>
+
+                                            </a>
+                                            <% } %>
+                                    </div>
+                                </div>
+                                <!-- #####################################################dropdown end -->
+                            </div>
+
+                        </div>
+                        <div class="bron">
+                            <ul id="add-track-data">
+
+                            </ul>
+
+                        </div>
+
+                        <!-- #######################################################end popover -->
+                    </div>
+                    <!-- <a class="c-btn c-btn--success c-btn--fullwidth newproject1 c-modal__close" href="#" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);color:#fff;">
+                        Continue
+                    </a> -->
+                    <button type="button" id="add_client" class="c-btn c-btn--fullwidth c-modal__close" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);color:#fff;border:1px solid purple">Save
+                    </button>
+                    <!-- <div id="delete"></div> -->
+                </div>
+            </div>
+            <!-- // .c-modal__content -->
+        </div>
+        <!-- // .c-modal__dialog -->
+    </div>
+    <!-- // .c-modal -->
+    <!--FIXME analytics modal -->
+
+
+    <div class="c-modal c-modal--large modal fade" id="analyticsmodal" tabindex="-1" role="dialog" aria-labelledby="analyticsmodal" data-backdrop="static">
+        <div class="c-modal__dialog modal-dialog" role="document">
+            <div class="c-modal__content">
+
+                <div class="c-modal__header" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);">
+                    <h3 class="c-modal__title">Settings</h3>
+
+                    <span class="c-modal__close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-close"></i>
+                    </span>
+                </div>
+
+
+                <div class="c-modal__body c-modal__body--maximized">
+                    <div class="container instabio-analytics" style="display: none">
+                        <h3 class="c-modal__title " style="color: #000;font-weight: 600;margin-bottom: 10px;">Social Media Tracking :</h3>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>name </th>
+                                        <th> username</th>
+                                        <th> url</th>
+                                        <th> clicks</th>
+
+
+
+                                    </tr>
+                                </thead>
+                                <tbody id="socialprint">
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <h3 class="c-modal__title mb-4" style="color: #000;font-weight: 600;margin-bottom: 10px;">Links Tracking :</h3>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped ">
+                                <thead>
+                                    <tr>
+                                        <th>Title </th>
+                                        <th> Links</th>
+                                        <th> clicks</th>
+
+
+
+
+                                    </tr>
+                                </thead>
+                                <tbody id="linksprint">
+
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                    <div class="container shorturl-analytics" style="display: none">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Inputs </th>
+                                        <th> Values</th>
+
+
+
+
+                                    </tr>
+                                </thead>
+                                <tbody id="shorturlprint">
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="container utm-analytics" style="display: none">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Inputs </th>
+                                        <th> Values</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="utmprint">
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="c-modal__footer">
+
+                    <button class="c-btn c-btn--secondary" style="opacity: 0">Cancel</button>
+
+                    <button class="c-btn c-modal__close " style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);color:#fff;border:1px solid purple;" data-dismiss="modal"> Close</button>
+                </div>
+
+            </div>
+            <!-- // .c-modal__content -->
+        </div>
+        <!-- // .c-modal__dialog -->
+    </div>
+    <!-- // .c-modal -->
+
+
+
+
+
+
+    <div class="container">
+        <div class="row u-mb-small u-pt-medium u-pb-medium">
+            <% if(shorturlsList.length <= 0) { %>
+
+                <div class="col-md-12 text-center res-create">
+                    <h3 style="    font-size: 30px;
+                font-weight: bold;">Hi, Welcome to biotree.</h3>
+                    <img src="../userui/biotree_dashboard.png" style="height:300px;margin-bottom: 20px;" />
+
+                </div>
+                <% } %>
+
+                    <div class="col-md-12 text-center res-create">
+                        <!-- <a class="c-btn c-btn--success u-mb-small" href="#">
+                create Your Links
+            </a> -->
+                        <a class="c-btn btn-color fullres sendparameter" id="t3" style="padding: 0.7rem 2rem; color: #fff;text-decoration: none; font-size:17px; font-weight: bold;" href='/create-shorturl'>
+                Create a Bio Link
+            </a>
+                    </div>
+                    <div class="col-md-6 res-create">
+                        <!-- <div class="col-md-9" style="padding-right:0;">
+                <input class="c-input u-mb-small gmd-4" type="text" placeholder="enter your link " style="border-top-right-radius: 0;border-bottom-right-radius: 0;">
+            </div>
+            <div class="col-md-3" style="padding-left:0;">
+                <a class="c-btn  btn-customcreate creating gmd-5" href="#" style="margin-top:1px;border-top-left-radius: 0%;border-bottom-left-radius: 0;"
+                 id="inputborder">
+                    shorten
+                </a>
+            </div> -->
+                        <!-- <div class="col-md-12 text-right borderit"> -->
+                        <div class="c-field has-addon-right" style="border-radius:5px;">
+
+
+                        </div>
+                        <!-- </div> -->
+
+                    </div>
+
+        </div>
+    </div>
+
+
+    <% if(shorturlsList.length > 0) { %>
+
+        <div class="container">
+            <div class=" everything" style="background:#fff;border-radius: 5px;">
+                <div class="row paddingitheader">
+                    <div class="col-md-6">
+                        <h3>Your Biolinks</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- <h3><input type="text" class="form-control" placeholder=" Search Here " id="searchurl"></h3> -->
+                    </div>
+                </div>
+                <hr>
+
+                <div class="shorturllist" id="shorturllist1">
+
+
+                    <% for(let i=shorturlsList.length-1; i >= 0; i--) { %>
+
+                        <div class="container hoverdynamically borderbottomresponsive filter-js">
+
+                            <div class="row u-mt-small u-mb-small paddingit1 ">
+                                <div class="col-md-1 col-4 i0">
+
+                                    <div> <img id="instructionsImg" class=" mx-auto d-block" src="<%=shorturlsList[i].dashimg%>" name="canvas" width="55" style="border-radius: 4px;" /></div>
+
+                                </div>
+
+                                <div class="col-md-5 col-8 i1	">
+                                    <div style="margin-top: 7px;">
+                                        <div class="row takeit">
+                                            <div class="col-md-4 d2 col ">
+                                                <% if (	shorturlsList[i].type === "shortenurl" || shorturlsList[i].type === "shortenurl_utm") { %>
+
+                                                    <button style="padding-bottom:2px;text-align: left;text-decoration: underline;	background: none;
+                                                    color: inherit;
+                                                    border: none;
+                                                    padding: 0;
+                                                    font: inherit;
+                                                    cursor: pointer;
+                                                    outline: inherit;" onclick="urllink('<%=shorturlsList[i].shortcode%>')">
+
+                                                    biotree.one/link/
+                                                    <%=shorturlsList[i].shortcode%>
+                
+                
+                                                        
+                                                    </button>
+
+              
+
+                                                    <% } else { %>
+                                                        <button style="padding-bottom:2px;text-align: left;text-decoration: underline;	background: none;
+                                                        color: inherit;
+                                                        border: none;
+                                                        padding: 0;
+                                                        font: inherit;
+                                                        cursor: pointer;
+                                                        outline: inherit;" onclick="urllink('<%=shorturlsList[i].shortcode%>')">
+
+                                                            biotree.one/link/
+                                                            <%=shorturlsList[i].shortcode%>
+                        
+                        
+                                                                
+                                                            </button>
+                                                        <!-- <a class="a1" href="/final/<%=shorturlsList[i]._id%>" target="_blank" style="padding-bottom:2px;text-align: left;text-decoration: underline" id="short">biotree.one/
+                                    <%=shorturlsList[i].shortcode%>
+                                </a> -->
+                                                        <% } %>
+                                            </div>
+                                            <div class="col-md-8 col i-innerresponsive">
+
+                                                <!-- <div class="tooltip1">
+
+                                                    <button onclick="myFunction41(this)" onmouseout="outFunc(this)" id="biotree.one/<%=shorturlsList[i].shortcode%>" class="copybutton" style="background: none;border: none">
+                                                  
+                                                    <span class="tooltiptext1 myTooltip" >  Copy</span>
+                                                    <i class="fa fa-clone copyshort" aria-hidden="true" style="cursor:pointer"></i>
+                                                    </button>
+                                                    <input type="text" class="copythis" style="width: 5px;opacity: 0;" value="biotree.one/<%=shorturlsList[i].shortcode%>">
+
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+
+                                        <p style="font-size: 14px;cursor: pointer;" class="negate slideit a2">
+                                            <%=shorturlsList[i].website%>
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <!-- *********************************************************** -->
+                                <div class="col-md-2  col i2">
+                                    <p class="calender dateresponsive">
+                                        <%= moment(shorturlsList[i].created_at).fromNow(); %>
+                                    </p>
+
+
+                                </div>
+                                <!-- *********************************************************** -->
+                                <!-- <div id="panel"> -->
+
+                                <div class="col-md-1 text-right col i3">
+                                    <div class="text-center signal ">
+                                        <a style="font-size: 15px" class="indi-analytics" id="<%=shorturlsList[i]._id%>" data-type="<%=shorturlsList[i].type%>" data-toggle="modal" data-target="#analyticsmodal">
+                                            <%=shorturlsList[i].clicks%>
+                                                <i class="fa fa-signal " aria-hidden="true" style="font-size: 25px"> </i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- *********************************************************** -->
+                                <% if (	shorturlsList[i].type === "shortenurl" || shorturlsList[i].type === "shortenurl_utm") { %>
+
+                                    <div class="centerthis1 col i5">
+                                        <a class="thefirst" data-toggle="modal" data-target="#modal9" onclick="updateShortURL('<%=shorturlsList[i]._id%>','<%=shorturlsList[i].type%>','<%=shorturlsList[i].shortcode%>', '<%=shorturlsList[i].website%>', '<%=shorturlsList[i].campaign_source%>','<%=shorturlsList[i].campaign_name%>','<%=shorturlsList[i].campaign_term%>','<%=shorturlsList[i].campaign_medium%>','<%=shorturlsList[i].campaign_content%>')">
+                                            <i class="fa fa-pencil" aria-hidden="true" style="font-size: 22px"></i>
+                                        </a>
+                                        <a onclick="deleteShortURL('<%=shorturlsList[i]._id%>')">
+                                            <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 22px"> </i>
+                                        </a>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="centerthis1 col i5">
+                                            <a class="thefirst" href="/instabio/<%=shorturlsList[i]._id%>" target="_blank">
+                                                <i class="fa fa-pencil" aria-hidden="true" style="font-size: 22px"></i>
+                                            </a>
+                                            <a onclick="deleteShortURL('<%=shorturlsList[i]._id%>')">
+                                                <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 22px"> </i>
+                                            </a>
+                                        </div>
+                                        <% } %>
+
+                                            <!-- ***************************************************************** -->
+                                            <% if (shorturlsList[i].type === "instabio" ) { %>
+
+                                                <div class="col-md-3 text-right col-12 i4">
+                                                    <div class="c-project" style="margin: 10px 0 0 0;padding: 0;border: none;">
+
+                                                        <div class="c-project__team pull-left i4-inner">
+
+                                                            <div>
+                                                                <a class="thefirst" href="/instabio/<%=shorturlsList[i]._id%>" target="_blank">
+                                                                    <i class="fa fa-pencil" aria-hidden="true" style="font-size: 22px"></i>
+                                                                </a>
+                                                                <a onclick="deleteShortURL('<%=shorturlsList[i]._id%>')">
+                                                                    <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 22px"> </i>
+                                                                </a>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <% } %>
+
+                            </div>
+                        </div>
+                        <% } %>
+
+
+
+
+
+                </div>
+
+
+            </div>
+            <br>
+            <br>
+
+            <br>
+
+
+            <br>
+            <br>
+
+
+
+
+
+
+        </div>
+
+        <% } %>
+
+
+
+            <!-- <button type="button" class="c-btn " id="success-modal" data-toggle="modal" data-target="#getmodal" style="background: transparent">
+                      </button> -->
+
+            <!-- Modal -->
+            <div class="c-modal modal fade" id="getmodal" tabindex="-1" role="dialog" aria-labelledby="standard-modal" data-backdrop="static">
+                <div class="c-modal__dialog modal-dialog" role="document">
+                    <div class="c-modal__content">
+
+                        <div class="c-modal__header" style="background: linear-gradient(135deg, #3f53a9 0%, #6b4193 100%);">
+                            <h3 class="c-modal__title"></h3>
+
+                            <span class="c-modal__close refreshbtn" data-dismiss="modal" aria-label="Close">
+                                          <i class="fa fa-close"></i>
+                                      </span>
+                        </div>
+
+
+
+                        <div class="c-modal__body">
+
+
+
+                            <div class="card card-563 text-center">
+                                <div class="card-body">
+
+                                    <div class="success-checkmark">
+                                        <div class="check-icon">
+                                            <span class="icon-line line-tip"></span>
+                                            <span class="icon-line line-long"></span>
+                                            <div class="icon-circle"></div>
+                                            <div class="icon-fix"></div>
+                                        </div>
+                                    </div>
+
+
+                                    <h5 class="card-text" id="success-message">Short Url Successfully Created </h5>
+                                    <br>
+
+                                    <div class="row d-flex justify-content-center">
+
+                                        <h5 class="card-text" id="success-url"> </h5>
+
+                                        <div class="tooltip1">
+
+                                            <button onclick="myFunction41(this)" onmouseout="outFunc(this)" class="copybutton21" style="background: none;border: none">
+                                                  
+                                                    <span class="tooltiptext1 myTooltip" >  Copy</span>
+                                                    <i class="fa fa-clone copyshort" aria-hidden="true" style="cursor:pointer"></i>
+                                                    </button>
+                                            <input type="text" class="copythis" style="width: 5px;opacity: 0;" id="success-url2">
+                                        </div>
+
+                                    </div>
+                                    <br>
+
+
+
+
+                                    <a class="c-btn btn-color gmd-5 refreshbtn" style="padding: 0.7rem 1.25rem;color: #fff;text-decoration: none;padding-left: 40px;padding-right: 40px" data-dismiss="modal">
+                                            Ok
+                                        </a>
+
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <!-- // .c-modal__content -->
+                    </div>
+                    <!-- // .c-modal__dialog -->
+                </div>
+            </div>
+
+            <!-- // .c-modal -->
+
+
+            <script src="/userui/js/main.min.js"></script>
+
+            <!-- <script src="/userui/js/dropdownjson.js"></script> -->
+            <!-- <script src="/userui/js/dashboard.js"></script> -->
+            <script src="/userui/js/new.js"></script>
+            <script src="/userui/js/clipboard.js"></script>
+
+            <script src="/userui/js/bootstrap/bootstrap.min.js"></script>
+
+            <!-- <script src="/userui/js/tour.js"></script> -->
+            <!-- <script src="/userui/js/bootstrap-tour-0.12.0//build/js/bootstrap-tour.js"></script> -->
+
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+            <script src="/userui/js/lloiser-jquery-searcher-b973fee/src/jquery.searcher.js"></script>
+
+            <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+            <script>
+                function onLoad() {
+                    gapi.load('auth2', function() {
+                        gapi.auth2.init();
+                    });
+                }
+
+                function signOut() {
+                    let auth2 = gapi.auth2.getAuthInstance();
+                    auth2.signOut().then(function() {});
+                    auth2.disconnect();
+                    window.location.href = "/login";
+                }
+            </script>
+            <!-- <script src="/userui/js/bootstrap-tour-0.12.0//build/js/bootstrap-tour-standalone.min.js"></script> -->
+
+            <script type="text/javascript">
+                function myFunction41(dump) {
+                    let new41 = $(dump).find('.myTooltip');
+                    let copyText = $(dump).attr("id");
+                    new41.text("Copied");
+                }
+
+                function outFunc(dump) {
+                    let new41 = $(dump).find('.myTooltip');
+                    new41.text("Copy");
+
+                }
+
+
+                $(".copybutton21").on("click", function() {
+
+                    let newa = $(this).next();
+                    console.log(newa);
+                    newa.select();
+                    document.execCommand("copy");
+
+
+                });
+
+                $('.checkshort').on("keyup", function() {
+                    let value = $(this).val();
+                    // console.log(value);
+                    let length = false;
+                    if (value.length = 0) {
+                        alert("please enter atleast 4 characters");
+                    } else {
+                        console.log("you can update");
+                        length = true;
+                    }
+                    console.log(length);
+
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/check-shorturl/' + value,
+                        success: function(data) {
+
+                            // console.log(data.data);
+                            let urlavailable = data.data;
+                            senderror(urlavailable);
+
+
+
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            let x = JSON.parse(XMLHttpRequest.responseText);
+                            let urlexists = x.error;
+                            // console.log(urlexists);
+
+                            senderror(urlexists);
+
+
+
+                            // console.log(textStatus + errorThrown + JSON.stringify(XMLHttpRequest.responseText));
+                        }
+                    });
+
+
+                    function senderror(urlexists, urlavailable) {
+                        console.log(urlexists);
+                        // console.log(urlavailable);
+                        if (urlexists === "Short URL exists") {
+                            console.log("show cross mark");
+                            $('.wrong').show();
+                            $('.correct').hide();
+
+
+                        } else {
+                            console.log("show tick mark");
+                            $('.correct').show();
+                            $('.wrong').hide();
+
+
+                        }
+                    }
+
+
+
+
+
+                    // ///////////
+                });
+                $(".refreshbtn").on("click", function() {
+
+
+                    location.reload();
+
+                });
+                // FIXME analytics popup
+
+                $('.shorturllist').on("click", '.indi-analytics', function() {
+                    let type = $(this).data("type");
+                    let shorts41 = <%- JSON.stringify(shorturlsList) %>;
+                    let id = $(this).attr("id");
+                    let result = shorts41.filter(function(o1) {
+                        return o1._id === id;
+                    });
+                    if (type === "instabio") {
+                        $("#linksprint").empty();
+                        $("#socialprint").empty();
+                        $(".instabio-analytics").show();
+                        $(".shorturl-analytics").hide();
+                        $(".utm-analytics").hide();
+                        console.log(result, "result");
+                        let social = result[0].socialmedia;
+                        let links = result[0].links;
+                        for (let index = 0; index < social.length; index++) {
+                            const name = social[index].name;
+                            const username = social[index].username;
+                            const clicks = social[index].clicks;
+                            const icon = social[index].icon;
+                            const url = social[index].url;
+                            let listItemToAdda21 = socialprint21(name, username, icon, url, clicks);
+                            $("#socialprint").append(listItemToAdda21);
+
+
+                        }
+                        for (let j = 0; j < links.length; j++) {
+                            const link = links[j].link;
+                            const title = links[j].title;
+                            const clicks21 = links[j].clicks;
+                            let listItemToAdda41 = linksprint41(link, title, clicks21);
+                            $("#linksprint").append(listItemToAdda41);
+
+
+
+                        }
+
+                    } else if (type === "shortenurl") {
+                        $(".instabio-analytics").hide();
+                        $(".shorturl-analytics").show();
+                        $(".utm-analytics").hide();
+                        $("#shorturlprint").empty();
+
+                        let website = result[0].website;
+                        let clicks = result[0].clicks;
+                        let listItemToAdda41 = shortprint(website, clicks);
+                        $("#shorturlprint").append(listItemToAdda41);
+
+                    } else {
+
+                        $(".instabio-analytics").hide();
+                        $(".shorturl-analytics").hide();
+                        $(".utm-analytics").show();
+                        $("#utmprint").empty();
+
+                        let website = result[0].utm_url;
+                        let clicks = result[0].clicks;
+                        let listItemToAdda41 = shortprint(website, clicks);
+                        $("#utmprint").append(listItemToAdda41);
+
+
+                    }
+
+
+
+                    // $('#analyticsmodal').modal("show");
+                });
+
+                function socialprint21(name, username, icon, url, clicks) {
+                    let ret = `<tr><td>${name}</td><td>${username}</td><td>${url}</td><td>${clicks}</td></tr>`;
+                    return ret;
+                }
+
+
+
+                function linksprint41(link, title, clicks) {
+                    console.log(clicks);
+                    let ret = `<tr><td>${link}</td><td>${title}</td><td>${clicks}</td></tr>`;
+
+                    return ret;
+                }
+
+                function shortprint(website, clicks) {
+
+                    let ret = `<tr><td>Website</td><td>${website}</td></tr><tr><td>Clicks</td><td>${clicks}</td></tr>`;
+
+                    return ret;
+                }
+                // <td>223</td>
+
+
+                $('.takeit').on('click', '.copybutton', function() {
+                    let newa = $(this).next();
+                    console.log(newa);
+                    newa.select();
+                    document.execCommand("copy");
+                    let $this = $(this);
+                    $this.popover({
+                        container: '#fileArea',
+                        placement: 'top auto',
+                        content: "This file has already been added to the queue."
+                    });
+                    setTimeout(function() {
+                        $this.popover('destroy')
+                    }, 1000);
+
+
+
+
+                });
+                // ////////////////////////////////////////////////////////////////////////////////////////////////
+                // FIXME ADD Tracking pixles to update modal
+                $('.droppingeditclient').on('click', '.update-add-client', function() {
+
+
+                    let prefixname = $(this).data("name");
+                    let icon = $(this).data("icon");
+                    let id = $(this).data("id");
+                    console.log(name);
+                    console.log(icon);
+                    console.log(id);
+                    let listItemToAdda = makelist1(icon, id, prefixname);
+                    $("#update-client-list").append(listItemToAdda);
+
+
+
+
+                });
+
+                // FIXME ADD Tracking pixles to add modal
+                $('.add-full-track').on('click', '.add-track-indi', function() {
+
+
+                    let prefixname = $(this).data("name");
+                    let icon = $(this).data("icon");
+                    let id = $(this).data("id");
+                    console.log(name);
+                    console.log(icon);
+                    console.log(id);
+                    let listItemToAdda = makelist1(icon, id, prefixname);
+                    $("#add-track-data").append(listItemToAdda);
+
+
+
+
+                });
+
+                function makelist1(img, id, name) {
+                    let $allData = `<div class="sortableitem u-mt-custom" ><li>
+<div class="row justify-content-left nolo r0">
+<div class="col-md-10 col-9 r2" >
+<div class="c-field has-addon-left">
+<span class="id" style="display:none">` + id + `</span>
+<span class="img" style="display:none">` + img + `</span>
+<span class="c-field__addon"><i class="` + img + `" style="font-size:22px;color:#fff"></i></span>
+<input class="c-input ip"  id="input1" type="text" placeholder="Enter Your tracking pixels id">
+<span class="name" style="display:none">` + name + `</span>
+
+</div>
+</div>
+<div class="col-md-1 col-1 text-center r4 " style="padding-top:8px;">
+<div class="pull-right">
+<i class="fa fa-question" aria-hidden="true" style="font-size:15px;"></i>
+</div>
+</div>
+<div class="col-md-1 col-1 r3">
+<div class="pull-right">
+<a class="btn deli"> <i class="fa fa-trash-o" aria-hidden="true"></i></a>
+</div>
+</div>
+</li></div>`;
+                    return $allData;
+
+                }
+
+
+
+                function updatetracking(inditrackicon, clientId, individualTrackingCode, individualTrackingid) {
+
+                    let $allData =
+                        `<div class="sortableitem u-mt-custom" ><li>
+<div class="row justify-content-left nolo r0">
+<div class="col-md-10 col-9 r2" >
+<div class="c-field has-addon-left">
+<span class="c-field__addon"><i class="` +
+                        inditrackicon +
+                        `" style="font-size:22px;color:#fff"></i></span>
+<span class="img" style="display:none">` + inditrackicon +
+                        `</span>
+
+<label class="c-field__label u-hidden-visually indi" for="input9">` +
+                        individualTrackingid +
+                        `</label>
+<input class="c-input ip"  id="input1" type="text" placeholder="Enter Your tracking pixels id" value="` +
+                        individualTrackingCode +
+                        `">
+</div>
+</div>
+<div class="col-md-1 col-1 text-center r4 " style="padding-top:8px;">
+<div class="pull-right">
+
+<i class="fa fa-question" aria-hidden="true" style="font-size:15px;"></i>
+<span class="naming1" style="display:none">` +
+                        clientId +
+                        `</span>
+</div>
+</div>
+<div class="col-md-1 col-1 r3">
+<div class="pull-right">
+<span class="naming" style="display:none">` +
+                        clientId +
+                        `</span>
+
+<a class="btn deli"> <i class="fa fa-trash-o" aria-hidden="true"></i></a>
+
+</div>
+</div>
+
+</li></div>`;
+
+                    return $allData;
+
+                }
+
+
+
+
+                // FIXME UPDATE CLIENT DATA
+
+                $('.dynamic').on("click", '.get-updated-data', function() {
+
+                    let clientId = $(this).attr("id");
+                    // ///////////////////////////update client validaton
+                    let clientname = false;
+                    let socialdata = false;
+                    let getcleintname = $('.q0e').val();
+                    console.log(getcleintname);
+                    if (!getcleintname) {
+                        alert("please enter Your Name");
+                        clientname = true;
+
+                        console.log("empty");
+                    } else {
+                        // console.log("its there");
+                    }
+                    let $socialdata = $('#update-client-list').children().length;
+
+                    if ($socialdata < 0) {
+                        console.log("its empty");
+                        socialdata = false;
+                    } else {
+                        console.log("its there");
+                    }
+                    let $appendData22 = $('#update-client-list').children()
+
+                    for (let index = 0; index < $appendData22.length; index++) {
+                        let $dynamic = $appendData22.eq(index);
+                        let trackingid = $dynamic.children().find('.id').html();
+                        let href = $dynamic.children().find('.ip').val();
+                        let img = $dynamic.children().find('.img').html();
+                        let name = $dynamic.children().find('.name').html();
+
+                        if (href === '') {
+                            $dynamic.children().eq(0).find('.disit').remove();
+
+                            $dynamic.children().eq(0).append('<span class="alert-danger disit">please Enter the URL here</span>');
+                            console.log("social empty");
+                            socialdata = true;
+
+                        } else {
+                            // $dynamic.children().eq(0).remove('.disit');
+                            $dynamic.children().eq(0).find('.disit').remove();
+                            console.log("socialthere");
+
+
+                        }
+
+
+                    }
+                    console.log(clientname);
+                    console.log(socialdata);
+                    if (clientname == false && socialdata == false) {
+                        console.log("send that data");
+                        sendupdated(clientId);
+                    }
+
+                    // //////////////////////////
+
+
+                    function sendupdated(clientId) {
+                        let clientobj = {
+
+                            'trackingList': []
+                        };
+                        let clientName = $('.q0e').val();
+                        console.log(clientName);
+                        clientobj.name = clientName;
+                        clientobj.clientId = clientId;
+
+                        let $appendData1 = $('#update-client-list').children()
+                        for (let index = 0; index < $appendData1.length; index++) {
+                            let $dynamic = $appendData1.eq(index);
+                            console.log($dynamic);
+                            let trackingid = $dynamic.children().find('.id').html();
+                            let href = $dynamic.children().find('.ip').val();
+                            let img = $dynamic.children().find('.img').html();
+                            let name = $dynamic.children().find('.name').html();
+
+                            let k = {}
+                            k.id = trackingid;
+                            k.tracking_code = href;
+                            k.icon = img;
+                            k.name = name;
+
+
+                            clientobj.trackingList.push(k)
+
+
+
+
+                        }
+                        console.log(clientobj);
+                        $.ajax({
+                            type: 'PUT',
+                            data: clientobj,
+                            url: '/update-client',
+                            success: function(data) {
+                                // alert(data.data);
+                                swal(
+                                    'Great!',
+                                    'Client Updated Successfully!',
+                                    'success'
+                                );
+                                location.reload();
+
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert(textStatus + errorThrown)
+                            }
+                        })
+                    }
+                });
+
+                $('.sort').on("click", ".deli", function() {
+
+                    let bolo = $(this).parentsUntil('.sortableitem').parent().remove();
+
+
+                });
+
+                // FIXME DELETE CLIENT DATA
+                $('.dynamic').on("click", '.delete-client', function() {
+                    let clientId = $(this).attr("id");
+                    console.log(clientId);
+                    $.ajax({
+                        type: 'delete',
+                        url: '/delete-client/' + clientId,
+                        success: function(data) {
+
+                            swal(
+                                'Great!',
+                                'Client Deleted Successfully!',
+                                'success'
+                            );
+                            let count = data.count;
+                            let clientid = data.clientid;
+                            // if (count > 0) {
+                            window.location.href = "/dashboard/" + clientid;
+                            // } else {
+                            // window.location.href = "/steps";
+                            // }
+
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(textStatus + errorThrown);
+                        }
+                    });
+
+                });
+
+                // FIXME ADD CLIENT
+                $('#add_client').on("click", function() {
+
+                    let clientname = false;
+                    let socialdata = false;
+                    let getcleintname = $('.q0d').val();
+                    console.log(getcleintname);
+                    if (!getcleintname) {
+                        alert("please enter Your Name");
+                        clientname = true;
+
+                        console.log("empty");
+                    } else {
+                        // console.log("its there");
+                    }
+                    let $socialdata = $('#add-track-data').children().length;
+
+
+                    let $appendData22 = $('#add-track-data').children();
+                    for (let index = 0; index < $appendData22.length; index++) {
+                        let $dynamic = $appendData22.eq(index);
+                        let trackingid = $dynamic.children().find('.id').html();
+                        let href = $dynamic.children().find('.ip').val();
+                        let img = $dynamic.children().find('.img').html();
+                        let name = $dynamic.children().find('.name').html();
+
+                        if (href === '') {
+                            $dynamic.children().eq(0).find('.disit').remove();
+                            $dynamic.children().eq(0).append('<span class="alert-danger disit">please Enter the URL here</span>');
+                            console.log("social empty");
+                            socialdata = true;
+
+                        } else {
+                            // $dynamic.children().eq(0).remove('.disit');
+                            $dynamic.children().eq(0).find('.disit').remove();
+                            console.log("socialthere");
+
+
+                        }
+
+
+                    }
+                    console.log(clientname);
+                    console.log(socialdata);
+                    if (clientname == false && socialdata == false) {
+                        console.log("send that data");
+                        addclientdata();
+                    }
+
+                    // ///////////////////////////////////////////////////sending data as object
+
+
+                    function addclientdata() {
+                        let clientobj = {
+
+                            'trackingList': []
+                        };
+                        let clientName = $('.q0d').val();
+                        console.log(clientName);
+                        clientobj.name = clientName;
+
+                        let $appendData1 = $('#add-track-data').children()
+                        for (let index = 0; index < $appendData1.length; index++) {
+                            let $dynamic = $appendData1.eq(index);
+                            console.log($dynamic);
+                            let trackingid = $dynamic.children().find('.id').html();
+                            let href = $dynamic.children().find('.ip').val();
+                            let img = $dynamic.children().find('.img').html();
+                            let name = $dynamic.children().find('.name').html();
+
+                            let k = {}
+                            k.id = trackingid;
+                            k.tracking_code = href;
+                            k.icon = img;
+                            k.name = name;
+
+
+                            clientobj.trackingList.push(k)
+
+
+
+
+                        }
+                        console.log(clientobj);
+                        $.ajax({
+                            type: 'POST',
+                            data: clientobj,
+                            url: '/create-client',
+                            success: function(data) {
+
+                                $('#modal7').modal('hide');
+                                let message = data.data;
+                                swal(
+                                    'Great!',
+                                    message,
+                                    'success'
+                                );
+                                location.reload();
+
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert(textStatus + errorThrown);
+                            }
+
+                        });
+
+
+
+                    }
+
+
+                });
+                // FIXME DELETE CLIENT DATA
+
+                $('#add-track-data').on("click", ".deli", function() {
+
+                    let bolo = $(this).parentsUntil('.sortableitem').parent().remove();
+
+                });
+
+
+
+
+
+
+
+
+                /////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+                function updateClient(clientName, clientId, trackingList) {
+                    $("#sortable2").empty();
+
+                    // console.log(clientName);
+                    // console.log(clientId);
+                    // console.log(trackingList);
+                    // console.log("anskdnsn");
+
+                    let clientCount = <%-JSON.stringify(trackingList) %>;
+                    // console.log(clientCount);
+                    console.log(clientCount);
+
+
+
+
+                    // /////////////////////////////////////////////////////
+
+
+
+                    // #################################################################################################################
+
+                    let $p1 = $('.d1e').children().eq(1);
+                    $('.q0e').val(clientName);
+                    $('.d1e').children().append(`<span id="clientid" style="display:none">` + clientId + `</span>`);
+
+                    //////////////////////////////////
+
+
+                    // ######################################################## get Updated Client Data##################################################################
+
+
+
+
+
+
+                    // ######################################################## get Updated Client Data##################################################################
+
+
+
+
+                    //////////////////
+                    // let count = JSON.parse(trackingList).length;
+                    // if (count > 0) {
+
+                    // }
+
+                }
+
+
+
+
+                function urllink(shortcode) {
+
+                    if (window.location.href.indexOf("localhost") > -1) {
+
+              
+
+                        window.open(
+                            `http://localhost:3000/link/${shortcode}`, "_blank");
+
+
+                    } else {
+
+                        // window.location.href = `/${shortcode}`
+
+                        window.open(
+                            `/link/${shortcode}`, "_blank");
+                    }
+
+
+                }
+
+                function updateShortURL(id, from, shortcode, website, source, name, term, medium, content) {
+                    // $('#modal9').modal('show');
+                    console.log(id);
+                    console.log(from);
+                    from = from.trim();
+                    console.log(shortcode);
+                    console.log(website);
+                    console.log(source);
+                    console.log(term);
+                    console.log(name);
+                    console.log(medium);
+                    console.log(content);
+                    if (from === "shortenurl") {
+                        $("#displayutm").hide();
+                    } else {
+                        $("#displayutm").show();
+
+                    }
+                    // if (source) {
+                    // 	console.log("hello");
+                    // 	$("#editheader").show();
+                    // 	$("#editheaderoptional").hide();
+                    // } else {
+                    // 	$("#editheaderoptional").show();
+                    // 	$("#editheader").hide();
+                    // }
+
+                    let shorturl = $('#input18').val(shortcode);
+                    let indiid = $("#individualid").html(id)
+                    let clientip = $("#fullip").val(website);
+                    let campaign_source = $('#campaign_sourceu').val(source);
+                    let campaign_medium = $('#campaign_mediumu').val(medium);
+                    let campaign_name = $('#campaign_nameu').val(name);
+                    let campaign_term = $('#campaign_termu').val(term);
+                    let campaign_content = $('#campaign_contentu').val(content);
+
+
+
+                }
+
+
+                $('.saveshort').on("click", function() {
+                    console.log("hello");
+                    let from = "shortenurl";
+                    let ide = $("#individualid").html();
+                    ide = ide.trim();
+                    let websiteurl = $("#fullip").val();
+                    let short = $('#input18').val();
+                    let campaign_source = $('#campaign_sourceu').val();
+                    let campaign_medium = $('#campaign_mediumu').val();
+                    let campaign_name = $('#campaign_nameu').val();
+                    let campaign_term = $('#campaign_termu').val();
+                    let campaign_content = $('#campaign_contentu').val();
+                    if (short.length > 5) {
+
+                    } else {
+                        console.log("you can send it");
+                        sendit();
+                    }
+
+                    function sendit() {
+
+                        if (!campaign_source) {
+                            console.log("empty");
+                            let obj = {};
+                            obj.id = ide;
+                            obj.url = websiteurl;
+                            obj.shortcode = short;
+                            obj.from = "shortenurl";
+                            console.log(obj);
+                            $.ajax({
+                                type: 'PUT',
+                                data: obj,
+                                url: '/update-shorturl',
+                                success: function(data) {
+
+                                    swal(
+                                        'Great!',
+                                        data.data,
+                                        'success'
+                                    );
+                                    location.reload();
+
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    alert(textStatus + errorThrown)
+                                }
+                            });
+                        } else {
+                            let obj1 = {
+
+                            };
+
+                            obj1.id = ide;
+                            obj1.url = websiteurl;
+                            obj1.shortcode = short;
+                            obj1.from = "shortenurl_utm";
+                            obj1.campaign_source = campaign_source;
+                            obj1.campaign_medium = campaign_medium;
+                            obj1.campaign_name = campaign_name;
+                            obj1.campaign_term = campaign_term;
+                            obj1.campaign_content = campaign_content;
+                            console.log(obj1);
+                            $.ajax({
+                                type: 'PUT',
+                                data: obj1,
+                                url: '/update-shorturl',
+                                success: function(data) {
+
+                                    swal(
+                                        'Great!',
+                                        data.data,
+                                        'success'
+                                    );
+                                    location.reload();
+
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    alert(textStatus + errorThrown)
+                                }
+                            });
+                        }
+                    }
+                });
+
+                function deleteShortURL(id) {
+                    console.log(id);
+                    $.ajax({
+                        type: 'delete',
+                        url: '/delete-shorturl/' + id,
+                        success: function(data) {
+
+                            // alert(data.data);
+                            swal({
+                                title: 'Great',
+                                text: 'Deleted Successfully!',
+                                type: 'success',
+                                confirmButtonText: 'OK'
+                            })
+                            location.reload();
+
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(textStatus + errorThrown);
+                        }
+                    });
+
+
+
+                }
+
+
+                $(document).ready(function() {
+
+
+                    $('.modalDialog1').hide();
+
+                    // //////////////////////////client id
+
+                    ////////////////////////////////
+                    // 98
+                    $('.hoverdynamically').on("mouseenter", ".hov", function() {
+                        // console.log("hello");
+                        if ($(window).width() > 700) {
+
+                            // $('.calender').hide();
+                            $(this).find('.calender').hide();
+                            $(this).find('.centerthis').show();
+                            // $('.centerthis').show();
+                        }
+
+                    });
+
+                    $('.hoverdynamically').on("mouseleave", ".hov", function() {
+                        // console.log("hello1");
+                        if ($(window).width() > 700) {
+
+                            $('.centerthis').hide();
+                            $('.calender').show();
+                        }
+                    });
+
+
+                    // console.log(clientCount);
+                    // declare it
+                    // if (clientCount == 0) // Show Add Client Popup if there are no Clients
+                    // {
+                    //     $('#modal7').modal('show');
+                    // }
+                    // /////////////////////////////////////
+                    // if (clientCount > 0) {
+
+                    // $('#modal7').modal('show');
+
+                    function domainCheck(dom) {
+                        // convert input to lowercase.
+                        dom = dom.toLowerCase();
+                        // find the first occurance of '.'
+                        pos = dom.indexOf(".");
+                        // Using the first occurance of '.'
+                        // find the extension submitted.
+                        tld = dom.substring(pos);
+                        switch (tld) {
+                            // TLD's to accept.
+                            case '.com':
+                                return true;
+                                break;
+                            case '.co.uk':
+                                return true;
+                                break;
+                            case '.eu':
+                                return true;
+                                break;
+                            case '.io':
+                                return true;
+                                break;
+                            case '.co':
+                                return true;
+                                break;
+                            case '.net':
+                                return true;
+                                break;
+                            default:
+                                return false;
+                        }
+                    }
+
+                    $('#shortenurl').on("click", function() {
+
+                        let website = $('#url').val();
+                        let containshttp = website.match(/(^http:\/\/)|(^www)/) != null;
+
+                        // let data312 = CheckIsValidDomain(website);
+                        // alert(data312);
+                        let value21 = domainCheck(website);
+                        // alert(value21);
+
+
+                        if (value21) {
+
+                            if ($('#url').val().startsWith("https://")) {
+                                let n = website.slice(8);
+                                doit(n);
+                            } else if ($('#url').val().startsWith("http://")) {
+                                let n = website.slice(7);
+                                doit(n);
+                            } else {
+                                let website = $('#url').val();
+
+                                doit(website);
+                            }
+                        } else {
+                            swal("Please Enter Valid Url! ");
+                        }
+
+
+
+
+                    });
+
+
+
+                    function sendajax(data231) {
+                        $.ajax({
+                            type: 'POST',
+                            data: data231,
+                            url: '/create-shorturl',
+                            success: function(data) {
+
+                                $('#url').val("");
+
+                                let url = data.url;
+                                $("#success-url").text("biotree.one/link/" + url);
+                                $("#success-url2").val("biotree.one/link/" + url);
+
+
+                                $("#success-modal").trigger("click");
+
+
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert(textStatus + errorThrown);
+                            }
+
+                        });
+
+
+                    }
+
+
+                    // /////////////////////////
+
+
+                    // //////////////////////////
+
+
+
+
+
+
+
+
+
+
+                    let shorts = <%- JSON.stringify(shorturlsList) %>;
+                    console.log(shorts);
+
+
+
+                    // for (let l = 0; l < clients.length; l++) {
+                    // 	for (let p = 0; p < clients[l].tracking.length; p++) {
+
+                    // 		if (clientiddefault === clients[l]._id) {
+                    // 			let icon = clients[l].tracking[p].icon;
+                    // 			let id = clients[l].tracking[p].id;
+                    // 			let trackcode = clients[l].tracking[p].trackcode;
+
+                    // 			console.log(icon);
+                    // 			let list = trackprint(icon, id, trackcode);
+                    // 			$('.shorturllist').append(list);
+
+                    // 		}
+                    // 	}
+                    // }
+                    // let list = trackprint(clientiddefault);
+                    // $('.shorturllist').append(list);
+
+
+
+                    $('[data-toggle="tooltip"]').tooltip();
+                    $('[data-toggle="popover"]').popover();
+
+
+
+
+
+
+                });
+                let temp = "adkasdmkasdksad";
+                // swal({
+                //     type: "success",
+                //     title: 'Title',
+                //     message: "jnaskldnklasnkdlasklndkn",
+                //     html: "Some Text" + "<br>" +
+                //         '<button type="button" role="button" tabindex="0" class="SwalBtn2 customSwalBtn">' + 'Button2' + '</button>',
+                //     showCancelButton: false,
+                //     showConfirmButton: false
+                // });
+                $("#shorturllist1").searcher({
+                    itemSelector: ".filter-js",
+                    textSelector: "div",
+                    inputSelector: "#searchurl",
+                    highlight: "<span class='highlight'>$1</span>",
+                    toggle: function(item, containsText) {
+
+                        if (containsText) {
+
+                            $(item).show();
+
+                        } else {
+
+                            $(item).hide();
+
+                        }
+
+                    }
+                });
+            </script>
+
+</body>
+
+</html>

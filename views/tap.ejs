@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <%-googletagbody%>
+
+
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Tap.sr</title>
+
+        <!-- <link rel="stylesheet" href="/userui/bootstrap/bootstrap.min.css"> -->
+        <!-- <link rel="stylesheet" href="css/main.css"> -->
+        <link rel="stylesheet" href="/userui/css/main.min.css">
+        <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+        crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="/userui/css/save.css">
+        <link rel="stylesheet" href="/userui/css/colors.css">
+        <link href="https://fonts.googleapis.com/css?family=Prompt" rel="stylesheet">
+
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            $(function() {
+
+                // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% border%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+                // console.log(fullData);
+                let fromdata = <%-JSON.stringify(from) %>;
+
+
+                if (fromdata === "instabio") {
+
+                    let shortcode = <%- JSON.stringify(shortcode)%>;
+                    console.log(shortcode);
+                    let loc = location.href;
+                    // loc += loc.indexOf("?") === -1 ? "?" : "&";
+                    // console.log(loc);
+                    // window.location.href = "/" + loc + "Tap.sr/" + shortcode;
+                    // window.location.href = "Tap.sr/" + shortcode;
+                    // //////////////////////////////////////////////////////// font color
+                    let previewcolor = <%-JSON.stringify(backgroundcolor) %>;
+                    console.log(previewcolor);
+                    if (previewcolor !== "purewhite") {
+                        // set white color to all buttons
+                        let $a1 = $('.flex-name');
+                        let $a2 = $('.flex-bio');
+                        let $a3 = $('.button-area');
+                        let $a4 = $('.button-area1');
+                        let $a5 = $('.flex-name1');
+                        let $image = $(".e1");
+                        $a1.addClass('white');
+                        $a2.addClass('white');
+                        $a3.addClass('white');
+                        $a4.addClass('white');
+                        $a5.addClass('white');
+                        $image.attr('src', '/userui/biotree_logo.png');
+                    } else {
+                        let $a1 = $('.flex-name');
+                        let $a2 = $('.flex-bio');
+                        let $a3 = $('.button-area');
+                        let $a4 = $('.button-area1');
+                        let $a5 = $('.flex-name1');
+                        let $image = $(".e1");
+                        $a1.addClass('black');
+                        $a2.addClass('black');
+                        $a3.addClass('black');
+                        $a4.addClass('black');
+                        $a5.addClass('black');
+                    }
+                    // ---------------------------------------
+
+                    let sendeddata = <%-JSON.stringify(sociallists) %>;
+                    let recordid = <%-JSON.stringify(id) %>;
+
+
+
+                    // ------------------------------------------------------
+                    // print social data if from dat is intabio 
+                    for (let d = 0; d < sendeddata.length; d++) {
+                        let savedid = sendeddata[d].id;
+                        let savedusername = sendeddata[d].username;
+                        let img = sendeddata[d].icon;
+                        let prefixurl = sendeddata[d].url;
+                        let name = sendeddata[d].name;
+                        let finalurl = prefixurl + savedusername;
+                        console.log(sendeddata[d]);
+
+                        let listItemToAdda = makesocial(img, savedid, name, prefixurl, savedusername, finalurl, recordid);
+                        $('.button-area').append(listItemToAdda);
+
+
+
+                    }
+
+                    function makesocial(img, savedid, name, prefixurl, savedusername, finalurl) {
+
+                        let $allData =
+                            ` <a  data-id="` + savedid + `" data-recordid="` + recordid + `" class="getsocialid" data-href="` + finalurl + `"><i class="` + img + `" id="previewicon" data-id="` + savedid + `" data-name="` + name + `"></i></a>`;
+
+                        return $allData;
+
+                    }
+
+
+                    let bordering = <%-JSON.stringify(border) %>;
+                    console.log(bordering);
+
+                    if (bordering === true) {
+                        // add is-active class
+                        let $a5 = $('.button-area');
+                        let $a6 = $('.button-area1');
+                        $a5.removeClass('rectangle');
+                        $a6.removeClass('rectangle');
+                        $a5.addClass('rounded');
+                        $a6.addClass('rounded');
+                    } else {
+                        // remove is-active class
+                        let $a3 = $('.button-area');
+                        let $a4 = $('.button-area1');
+                        $a3.removeClass('rounded');
+                        $a4.removeClass('rounded');
+                        $a3.addClass('rectangle');
+                        $a4.addClass('rectangle');
+                    }
+
+
+
+                    let obj = {};
+                    obj.shortcode = shortcode;
+                    $.ajax({
+                        type: 'POST',
+                        data: obj,
+                        url: '/savetrackingclicks',
+                        success: function(data) {
+
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(textStatus + errorThrown);
+                        }
+
+                    })
+                }
+
+
+
+                if (fromdata === "shortenurl") {
+                    let websiteurl = <%-JSON.stringify(websiteurl) %>;
+                    let shortcode = <%-JSON.stringify(shortcode) %>;
+                    let id = <%-JSON.stringify(id) %>;
+
+
+                    let obj = {};
+                    obj.shortcode = shortcode;
+                    $.ajax({
+                        type: 'POST',
+                        data: obj,
+                        url: '/savetrackingclicks',
+                        success: function(data) {
+
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(textStatus + errorThrown);
+                        }
+
+                    })
+                    window.location = "http://" + websiteurl;
+
+
+                }
+
+                if (fromdata === "shortenurl_utm") {
+                    let websiteurl = <%-JSON.stringify(websiteurl) %>;
+                    let shortcode = <%-JSON.stringify(shortcode) %>;
+
+                    let obj = {};
+                    obj.shortcode = shortcode;
+                    $.ajax({
+                        type: 'POST',
+                        data: obj,
+                        url: '/savetrackingclicks',
+                        success: function(data) {
+
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(textStatus + errorThrown);
+                        }
+
+                    })
+                    window.location = "http://" + websiteurl;
+
+
+                }
+
+                $('.button-area').on("click", '.getsocialid', function() {
+
+                    let id = $(this).data("id");
+                    let recordid = $(this).data("recordid");
+                    let href = $(this).data("href");
+
+                    let type = "social";
+
+                    let obj = {};
+                    obj.id = id;
+                    obj.type = type;
+                    obj.recordid = recordid;
+
+
+
+                    $.ajax({
+                        type: 'POST',
+                        data: obj,
+                        url: '/savesocialorlink',
+                        success: function(data) {
+
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(textStatus + errorThrown);
+                        }
+
+                    })
+                    window.location = href;
+
+
+
+                })
+
+
+                $('.button-area1').on("click", '.getlinkid', function() {
+
+                    let id = $(this).data("id");
+                    let recordid = $(this).data("recordid");
+                    let href = $(this).data("href");
+
+
+                    let type = "links";
+                    let obj = {};
+                    obj.id = id;
+                    obj.type = type;
+                    obj.recordid = recordid;
+
+
+
+                    $.ajax({
+                        type: 'POST',
+                        data: obj,
+                        url: '/savesocialorlink',
+                        success: function(data) {
+
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(textStatus + errorThrown);
+                        }
+
+                    })
+
+                    window.location = "https://" + href;
+
+
+
+
+                })
+
+
+                // ////////////////////////////////////////////
+
+
+                let data = [{
+                    name: 'Butters',
+                    age: 3,
+                    type: 'dog'
+                }, {
+                    name: 'Lizzy',
+                    age: 6,
+                    type: 'dog'
+                }, {
+                    name: 'Red',
+                    age: 1,
+                    type: 'cat'
+                }, {
+                    name: 'Joey',
+                    age: 3,
+                    type: 'dog'
+                }, ];
+                let ages = data
+                    .filter((animal) => {
+                        return animal.type === 'dog';
+                    }).map((animal) => {
+                        return animal.age * 7
+                    }).reduce((sum, animal) => {
+                        return sum + animal.age;
+                    });
+
+            });
+        </script>
+        <style>
+            @import url("https://use.typekit.net/foj0sle.css");
+        </style>
+</head>
+
+<body id="<%=backgroundcolor%>">
+
+    <%-googletagbody%>
+        <%-googleads%>
+            <%-instagram%>
+                <%-facebook%>
+
+
+                    <!-- <div id="preview"> -->
+                    <div class="contain" id="myNavbar">
+                        <!-- <div class="phonebody-external"> -->
+                        <div class="phonebody-internal1 thing">
+                            <div class="flex-image">
+
+                                <% if (	clientimage) { %>
+
+                                    <div> <img id="instructionsImg" class="roundimage mx-auto d-block" src="<%=clientimage%>" /></div>
+
+                                    <% } else { %>
+                                        <div> </div>
+
+                                        <% } %>
+
+
+                            </div>
+                            <div class="flex-name">
+                                <div>
+                                    <%=name%>
+
+                                </div>
+                            </div>
+                            <div class="flex-bio">
+                                <div>
+                                    <%=bio%>
+
+                                </div>
+                            </div>
+                            <div class="button-area rectangle">
+
+                            </div>
+                            <div class="button-area1 rectangle">
+                                <% for(let i=0; i < links.length; i++) { %>
+                                    <a data-id="<%=links[i].id%>" data-href="<%=links[i].link%>" data-recordid="<%=id%>" class="getlinkid">
+
+                                        <%=links[i].title%>
+                                    </a>
+                                    <% } %>
+                            </div>
+                            <div class="flex-name1 ">
+                                <div><span id="line21" style="color:#fff">Powered by</span>
+                                    <img src="/userui/biotree_logo.png" class="e1">
+                                    <!-- <img src="/userui/logo.png" id="e0"> -->
+                                    <!-- <span id="logo21">TapShort</span> -->
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- </div> -->
+                    </div>
+
+                    <%-twitterdata%>
+
+
+                        <!-- <script src="/userui/js/final.js"></script> -->
+                        <!-- </div> -->
+</body>
