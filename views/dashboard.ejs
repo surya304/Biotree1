@@ -559,40 +559,23 @@
                                 <!-- *********************************************************** -->
                                 <!-- <div id="panel"> -->
 
-                                <div class="col-md-1 text-right col i3">
-                                    <div class="text-center signal ">
-                                        <a style="font-size: 15px" class="indi-analytics" id="<%=shorturlsList[i]._id%>" data-type="<%=shorturlsList[i].type%>" data-toggle="modal" data-target="#analyticsmodal">
-                                            <%=shorturlsList[i].clicks%>
-                                                <i class="fa fa-signal " aria-hidden="true" style="font-size: 25px"> </i>
-                                        </a>
-                                    </div>
-                                </div>
+                           
                                 <!-- *********************************************************** -->
                                 <% if (	shorturlsList[i].type === "shortenurl" || shorturlsList[i].type === "shortenurl_utm") { %>
-
                                     <div class="centerthis1 col i5">
-                                        <a class="thefirst" data-toggle="modal" data-target="#modal9" onclick="updateShortURL('<%=shorturlsList[i]._id%>','<%=shorturlsList[i].type%>','<%=shorturlsList[i].shortcode%>', '<%=shorturlsList[i].website%>', '<%=shorturlsList[i].campaign_source%>','<%=shorturlsList[i].campaign_name%>','<%=shorturlsList[i].campaign_term%>','<%=shorturlsList[i].campaign_medium%>','<%=shorturlsList[i].campaign_content%>')">
+                                        <a class="thefirst" href="/instabio/<%=shorturlsList[i]._id%>" target="_blank">
                                             <i class="fa fa-pencil" aria-hidden="true" style="font-size: 22px"></i>
                                         </a>
                                         <a onclick="deleteShortURL('<%=shorturlsList[i]._id%>')">
                                             <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 22px"> </i>
                                         </a>
                                     </div>
-                                    <% } else { %>
-                                        <div class="centerthis1 col i5">
-                                            <a class="thefirst" href="/instabio/<%=shorturlsList[i]._id%>" target="_blank">
-                                                <i class="fa fa-pencil" aria-hidden="true" style="font-size: 22px"></i>
-                                            </a>
-                                            <a onclick="deleteShortURL('<%=shorturlsList[i]._id%>')">
-                                                <i class="fa fa-trash-o" aria-hidden="true" style="font-size: 22px"> </i>
-                                            </a>
-                                        </div>
                                         <% } %>
 
                                             <!-- ***************************************************************** -->
                                             <% if (shorturlsList[i].type === "instabio" ) { %>
 
-                                                <div class="col-md-3 text-right col-12 i4">
+                                                <div class="col-md-3 text-right col-12 i4" >
                                                     <div class="c-project" style="margin: 10px 0 0 0;padding: 0;border: none;">
 
                                                         <div class="c-project__team pull-left i4-inner">

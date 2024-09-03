@@ -88,7 +88,7 @@ $(function () {
     const $flexName = $('.flex-name, .flex-name1');
     const $flexBio = $('.flex-bio');
     const $buttonArea = $('.button-area, .button-area1');
-    const $image = $("#item-img-output");
+    const $image = $(".item-img-output");
     const $secondSwitch = $("#secondswitch");
     const $socialMediaContainer = $("#socialMediaContainer");
     const $SociallinkContainer = $("#sortable");
@@ -657,7 +657,7 @@ finalData._id = data._id;
 
     $(".submitButton").on("click", function () {
 
-        finalData.dashimg = $("#item-img-output").attr('src');
+        finalData.dashimg = $image.attr('src');
 
         let errors = [];
         console.log(finalData, "finalData");
@@ -714,7 +714,7 @@ finalData._id = data._id;
     });
 
     $('.updating').on('click', function(e) {
-        finalData.dashimg = $("#item-img-output").attr('src');
+        finalData.dashimg = $image.attr('src');
 
         let errors = [];
         console.log(finalData, "finalData");
