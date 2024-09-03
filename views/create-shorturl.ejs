@@ -127,10 +127,10 @@
             </header>
      
     <div id="preview">
-        <div class="phonebody-internal1 thing" >
+        <div class="phonebody-internal thing" >
             <div class="flex-image">
                 <div>
-                    <img  class="roundimage mx-auto d-block" id="item-img-output1" src="https://mybucket4345.s3.amazonaws.com/uploads/1724979630457.jpeg" />
+                    <div><img  class="roundimage mx-auto d-block" id="item-img-output" /></div>
                 </div>
             </div>
             <div class="flex-name">
@@ -141,12 +141,7 @@
 					iusto veritatis ab odio hic.</div> -->
             </div>
             <div class="button-area rectangle">
-                <!-- <a href="#">Button 1</a>
-				<a href="#">Button 2</a>
-				<a href="#">Button 3</a>
-				<a href="#">Button 4</a>
-				<a href="#">Button 5</a>
-				<a href="#">Button 6</a> -->
+             
             </div>
             <div class="button-area1 rectangle">
                 <!-- <a href="#">Button 1</a>
@@ -652,7 +647,7 @@
         <br>
         <a href="#" id="someButton"></a>
         <div class="footer">
-            <a class="btn btn-custom" id="polo" style="color: #fff">see preview</a>
+            <a class="btn btn-custom" id="polo" style="color: #fff" onclick="scrollToTop()">see preview</a>
         </div>
 
 
@@ -678,7 +673,9 @@
 
         <script src="/userui/js/finalscript.js"></script>
         <script>
-         
+            function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
             function myFunction41(dump) {
                 let new41 = $(dump).find('.myTooltip');
