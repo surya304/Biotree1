@@ -21,110 +21,70 @@
     <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
     <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
-
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/userui/css/main.css">
     <style>
         @import url("https://use.typekit.net/foj0sle.css");
     </style>
     <style media="screen">
-
+        .error-message {
+            color: red;
+            display: none;
+        }
     </style>
     <script type="text/javascript">
         $(document).ready(function() {
-            if ($("#email").val().length > 0) {
-                $("#checkemail").hide();
-
-
-            }
-            if ($("#password").val().length > 0) {
-                $("#checkpass").hide();
-
-
-
-            }
             $("#login").click(function(e) {
-                console.log('askdisadasinm');
                 e.preventDefault();
 
-                let data = {};
-                data.email = $("#email").val();
-                data.password = $("#password").val();
+                let data = {
+                    email: $("#email").val(),
+                    password: $("#password").val()
+                };
 
-                if ($("#email").val().length == 0) {
-                    // console.log("empty email");
+                $(".error-message").hide();
+
+                if (!data.email) {
                     $("#checkemail").show();
-
-
                 }
-                if ($("#password").val().length == 0) {
-                    // console.log("empty password");
+                if (!data.password) {
                     $("#checkpass").show();
-
-
                 }
 
-                if ($("#email").val().length > 0 && $("#password").val().length > 0) {
-                    $("#checkemail").hide();
-                    $("#checkemail").hide();
-
-
+                if (data.email && data.password) {
                     $.ajax({
                         type: 'POST',
                         data: data,
                         url: '/login',
                         success: function(data) {
-
-
-                         
-
                             window.location.href = "/dashboard";
-
-                        
                         },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            // alert(textStatus + errorThrown);
-                            let x = JSON.parse(XMLHttpRequest.responseText);
-                            let urlexists = x.error;
-                            console.log(urlexists);
+                        error: function(XMLHttpRequest) {
+                            let response = JSON.parse(XMLHttpRequest.responseText);
+                            let error = response.error;
 
-                            senderror(urlexists);
+                            if (error === "invalid credentials") {
+                                $("#verifyemail").show();
+                                $("#verifypass").show();
+                            } else if (error === "internal_server_error") {
+                                $("#servererror").show();
+                            }
                         }
                     });
-
-                    function senderror(urlexists, urlavailable) {
-                        console.log(urlexists);
-                        if (urlexists === "invalid credentials") {
-                            // console.log("show cross mark");
-                            $('#verifyemail').show();
-                            $('#verifypass').show();
-
-
-
-                        }
-                    }
-
-
-
                 }
-
             });
-
         });
     </script>
-
-
 </head>
 
 <body class="o-page o-page--center">
     <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
 
     <div class="o-page__card">
         <div class="c-card u-mb-xsmall">
-            <header class="c-card__header u-pt-small" style="background: #4780E7; color: #fff;
-            text-decoration: none;">
+            <header class="c-card__header u-pt-small" style="background: #4780E7; color: #fff; text-decoration: none;">
                 <a class="c-card__icon" href="#!" style="background: #fff;padding:8px">
                     <img src="../userui/180.png" alt="Dashboard UI Kit">
                 </a>
@@ -134,31 +94,31 @@
             <form class="c-card__body">
                 <div class="c-field u-mb-small">
                     <label class="c-field__label" for="input1">Log in with your e-mail address</label>
-                    <input class="c-input " type="email" id="email" placeholder="clark@dashboard.com">
-                    <small class="c-field__message u-color-danger " id="checkemail" style="display:none">
-                        <i class="fa fa-times-circle"></i>Please Enter Your Email
+                    <input class="c-input" type="email" id="email" placeholder="clark@dashboard.com">
+                    <small class="c-field__message u-color-danger error-message" id="checkemail">
+                        <i class="fa fa-times-circle"></i> Please Enter Your Email
                     </small>
-                    <small class="c-field__message u-color-danger " id="verifyemail" style="display:none">
-                        <i class="fa fa-times-circle"></i>Please Enter valid Email
+                    <small class="c-field__message u-color-danger error-message" id="verifyemail">
+                        <i class="fa fa-times-circle"></i> Invalid Email or Password
                     </small>
                 </div>
 
                 <div class="c-field u-mb-small">
                     <label class="c-field__label" for="input2">Password</label>
                     <input class="c-input" type="password" id="password" placeholder="Numbers, Letters...">
-                    <small class="c-field__message u-color-danger " id="checkpass" style="display:none">
-                        <i class="fa fa-times-circle"></i>Please Enter Your Password
+                    <small class="c-field__message u-color-danger error-message" id="checkpass">
+                        <i class="fa fa-times-circle"></i> Please Enter Your Password
                     </small>
-                    <small class="c-field__message u-color-danger " id="verifypass" style="display:none">
-                        <i class="fa fa-times-circle"></i>Please Enter valid Password
+                    <small class="c-field__message u-color-danger error-message" id="verifypass">
+                        <i class="fa fa-times-circle"></i> Invalid Email or Password
                     </small>
                 </div>
 
-                <button class="c-btn btn-color c-btn--fullwidth u-mt-small" id="login" style="background: #4780E7;
-                color: #fff;text-decoration: none;border:0">Sign
-                    in to Dashboard</button>
+                <small class="c-field__message u-color-danger error-message" id="servererror">
+                    <i class="fa fa-times-circle"></i> An error occurred during the login process. Please try again later.
+                </small>
 
-
+                <button class="c-btn btn-color c-btn--fullwidth u-mt-small" id="login" style="background: #4780E7; color: #fff; text-decoration: none; border:0">Sign in to Dashboard</button>
             </form>
         </div>
 
@@ -169,7 +129,6 @@
     </div>
 
     <script src="/userui/js/main.js"></script>
-
 </body>
 
 </html>

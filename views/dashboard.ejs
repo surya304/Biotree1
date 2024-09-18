@@ -1552,14 +1552,18 @@
                         url: '/delete-shorturl/' + id,
                         success: function(data) {
 
-                            // alert(data.data);
                             swal({
-                                title: 'Great',
-                                text: 'Deleted Successfully!',
-                                type: 'success',
-                                confirmButtonText: 'OK'
-                            })
-                            location.reload();
+        title: 'Delted your instabio link!',
+        text: '',
+        icon: 'success',
+        button: 'OK'
+    }).then((value) => {
+        if (value) {
+            location.reload();
+        }
+    });
+
+                        
 
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {

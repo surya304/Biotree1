@@ -6,188 +6,132 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Register</title>
     <meta name="description" content="Dashboard UI Kit">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="https://use.typekit.net/foj0sle.css">
     <link rel="shortcut icon" href="/userui/64.png" type="image/x-icon">
     <link rel="stylesheet" href="/userui/css/main.css">
     <link rel="stylesheet" href="/userui/css/custom.css">
-
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <style>
+        .error-message {
+            color: red;
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#newSignup").click(function(e) {
+                e.preventDefault();
 
+                let data = {
+                    name: $("#name").val(),
+                    email: $("#email").val(),
+                    password: $("#password").val()
+                };
 
+                $(".error-message").hide();
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                if (!data.name) {
+                    $("#checkname").show();
+                }
+                if (!data.email) {
+                $("#checkemail").show();
+                isValid = false;
+            } else if (!validateEmail(data.email)) {
+                $("#invalidemail").show();
+                isValid = false;
+            }
 
+                if (!data.password) {
+                    $("#checkpass").show();
+                }
 
+                if (data.name && data.email && data.password) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/subscribe",
+                        data: data,
+                        success: function(data) {
+                            window.location.href = '/login';
+                        },
+                        error: function(XMLHttpRequest) {
+                            let response = JSON.parse(XMLHttpRequest.responseText);
+                            let error = response.error;
 
-
-
-
+                            if (error === "email_exists") {
+                                $("#verifyemail").show();
+                            } else if (error === "internal_server_error") {
+                                $("#servererror").show();
+                            }
+                        }
+                    });
+                }
+            });
+            function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(String(email).toLowerCase());
+        }
+        });
+    </script>
 </head>
 
 <body class="o-page o-page--center">
     <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
+
     <div class="o-page__card">
         <div class="c-card u-mb-xsmall">
-            <header class="c-card__header" style="background: #4780E7; color: #fff;
-            text-decoration: none;">
+            <header class="c-card__header" style="background: #4780E7; color: #fff; text-decoration: none;">
                 <a class="c-card__icon" href="#!" style="background: #fff;padding:8px">
                     <img src="/userui/180.png" alt="Dashboard UI Kit">
                 </a>
-                <h1 class="u-h3 u-text-center u-mb-zero u-pt-small" style="color:#fff">Sign up to biotree</h1>
+                <h1 class="u-h3 u-text-center u-mb-zero u-pt-small" style="color:#fff">Sign up to Biotree</h1>
             </header>
             <div class="inner" style="padding: 15px;">
-
                 <div class="c-field u-mb-small">
-                    <label class="c-field__label" for="input1">Name</label>
+                    <label class="c-field__label" for="name">Name</label>
                     <input class="c-input" type="text" name="name" id="name" placeholder="Name">
-                    <small class="c-field__message u-color-danger " id="checkname" style="display:none">
-                        <i class="fa fa-times-circle"></i>Please Enter Your Name
+                    <small class="c-field__message u-color-danger error-message" id="checkname">
+                        <i class="fa fa-times-circle"></i> Please Enter Your Name
                     </small>
                 </div>
 
                 <div class="c-field u-mb-small">
-                    <label class="c-field__label" for="input2">Email</label>
+                    <label class="c-field__label" for="email">Email</label>
                     <input class="c-input" type="email" name="email" id="email" placeholder="Email ID">
-                    <small class="c-field__message u-color-danger " id="checkemail" style="display:none">
-                        <i class="fa fa-times-circle"></i>Please Enter Your Email
+                    <small class="c-field__message u-color-danger error-message" id="checkemail">
+                        <i class="fa fa-times-circle"></i> Please Enter Your Email
+                    </small>
+                    <small class="c-field__message u-color-danger error-message" id="verifyemail">
+                        <i class="fa fa-times-circle"></i> Email already exists
                     </small>
                 </div>
 
                 <div class="c-field u-mb-small">
-                    <label class="c-field__label" for="input3">Password</label>
+                    <label class="c-field__label" for="password">Password</label>
                     <input class="c-input" type="password" name="password" id="password" placeholder="Password">
-                    <small class="c-field__message u-color-danger " id="checkpass" style="display:none">
-                        <i class="fa fa-times-circle"></i>Please Enter Your Password
+                    <small class="c-field__message u-color-danger error-message" id="checkpass">
+                        <i class="fa fa-times-circle"></i> Please Enter Your Password
                     </small>
                 </div>
-                <div class="c-field u-mb-small">
-                    <div class="g-recaptcha" data-sitekey="6Ld9usgUAAAAAFETV6oRijtGXJL_Nc1kzG_jPt2z
-               ">
 
-                    </div>
-                </div>
+                <small class="c-field__message u-color-danger error-message" id="servererror">
+                    <i class="fa fa-times-circle"></i> An error occurred during the signup process. Please try again later.
+                </small>
 
-          
-
-                <button class="c-btn c-btn--info c-btn--fullwidth" id="newSignup" name="signup" style="background: #4780E7;
-                color: #fff;text-decoration: none;border: 1px solid #4780E7">Sign
-                    Up</button>
-           
-
-
+                <button class="c-btn c-btn--info c-btn--fullwidth" id="newSignup" name="signup" style="background: #4780E7; color: #fff; text-decoration: none; border: 1px solid #4780E7">Sign Up</button>
             </div>
-
-
         </div>
-
 
         <div class="o-line">
             <a class="u-text-mute u-text-small" href="/login" title="Login">
                 <i class="fa fa-long-arrow-left u-mr-xsmall"></i> Already have an account, login instead
             </a>
         </div>
-
     </div>
 
-
-
-    <script>
-        $(document).ready(function() {
-
-            let newBtn = document.getElementById("#newSignup");
-
-            console.log(newBtn, 'newBtn');
-
-            $("#newSignup").click(function(e) {
-
-
-
-
-
-                e.preventDefault();
-                let $name = $("#name").val();
-                let email = $("#email").val();
-                let $password = $("#password").val();
-
-
-
-
-                sendobj();
-
-
-
-
-                function isEmail(email) {
-                    let regex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,24})$/;
-                    return regex.test(email);
-                }
-                // ////////////////////////////////////////
-                function sendobj() {
-
-                    let data = {};
-                    let obj = {
-                        name: $("#name").val(),
-                        email: $("#email").val(),
-                        password: $("#password").val(),
-
-
-                    }
-                    data.name = $("#name").val();
-                    data.email = $("#email").val();
-                    data.password = $("#password").val();
-
-
-                    console.log(obj);
-                    $.ajax({
-                        type: "POST",
-                        url: "/subscribe",
-                        data: obj,
-                        success: function(data) {
-                            // alert(JSON.stringify(data));
-                            window.location.href = '/login';
-                        
-
-                        },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
-
-                            // swal("Oops...",
-                            //     XMLHttpRequest.responseJSON.message,
-                            //     "error");
-                            // alert("Status: " + textStatus);
-                            // alert("Error: " + errorThrown);
-                        }
-                    });
-                }
-
-
-
-
-
-                // ////////////////////////////////////////
-
-            });
-
-
-
-
-        });
-
-
-
-    </script>
-
-
-
-    <!-- <script src="/userui/js/main.min.js"></script> -->
-
-
-
-
+    <script src="/userui/js/main.js"></script>
 </body>
 
 </html>

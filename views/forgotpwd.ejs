@@ -11,163 +11,89 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600" rel="stylesheet">
 
-    <!-- Favicon -->
-    <!-- <link rel="apple-touch-icon" href="/userui/apple-touch-icon.png">
-    <link rel="shortcut icon" href="/userui/64.png" type="image/x-icon">
-
-
-    <!-- Stylesheet -->
-
     <link rel="stylesheet" href="/userui/css/main.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+    <style>
+        .error-message {
+            color: red;
+            display: none;
+        }
 
+     
+    </style>
 
     <script type="text/javascript">
-        $(function() {
-            $('.sendit').on('click', function() {
-                let email = $('#email').val();
+        $(document).ready(function() {
+            $('.sendit').on('click', function(e) {
+                e.preventDefault();
 
-                if (!isEmail(email)) {
-                    // alert("please enter valid email");
+                const email = $('#email').val();
+
+                if (!isValidEmail(email)) {
                     $("#checkemail").show();
-
                 } else {
                     $("#checkemail").hide();
-
-                    sendit();
-
-                }
-
-                function isEmail(email) {
-                    let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-                    return regex.test(email);
-                }
-
-                function sendit() {
-                    let obj = {
-
-                    };
-                    let email = $('#email').val();
-                    obj.email = email;
-                    console.log(obj);
-
-
-                    $.ajax({
-                        type: "POST",
-                        url: "/sendforgotemail",
-                        data: obj,
-                        success: function(data) {
-                            //////////////
-                            swal(
-                                'Great!',
-                                data.message,
-                                'success'
-                            );
-                            // window.location.href = '/create-shorturl';
-                        },
-                        error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            console.log(XMLHttpRequest.responseJSON.message);
-                            swal("Oops...",
-                                XMLHttpRequest.responseJSON.message,
-                                "error");
-                        }
-                    });
-
-
+                    sendResetEmail(email);
                 }
             });
 
+            function isValidEmail(email) {
+                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return regex.test(email);
+            }
+
+            function sendResetEmail(email) {
+                $.ajax({
+                    type: "POST",
+                    url: "/sendforgotemail",
+                    data: { email },
+                    success: function(response) {
+                        swal('Great!', response.message, 'success');
+                    },
+                    error: function(xhr) {
+                        const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
+                        swal("Oops...", errorMessage, "error");
+                    }
+                });
+            }
         });
     </script>
 </head>
 
 <body class="o-page o-page--center">
     <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
 
     <div class="o-page__card">
-        <!-- <div class="c-card u-mb-xsmall">
-                <header class="c-card__header u-text-center u-pt-large">
-                    <a class="c-card__icon" href="#!">
-                        <img src="/userui/img/logo-login.svg" alt="Dashboard's Logo">
-                    </a>
-                    <div class="row u-justify-center">
-                        <div class="col-9">
-                            <h1 class="u-h3">Forgot your password</h1>
-                            <p class="u-h6 u-text-mute">
-                                Enter your email address to receive password reset instructions
-                            </p>
-                        </div>
-                    </div>
-                </header>
-
-                <form class="c-card__body">
-                    <div class="c-field u-mb-small">
-                        <label class="c-field__label" for="input1">Email Address:</label>
-                        <input class="c-input" type="email" id="input1" placeholder="clark@dashboard.com">
-                    </div>
-
-                    <button class="c-btn c-btn--info c-btn--fullwidth" type="submit">Send Password Reset Instructions</button>
-                </form>
-            </div> -->
-        <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-
         <div class="c-card u-mb-xsmall">
-            <header class="c-card__header u-pt-small" style="background: #4780E7; color: #fff;
-        text-decoration: none;">
-                <a class="c-card__icon" href="#!" style="background: #fff;padding:8px">
+            <header class="c-card__header u-pt-small" style="background: #4780E7; color: #fff;">
+                <a class="c-card__icon" href="/login" style="background: #fff; padding: 8px;">
                     <img src="/userui/180.png" alt="Dashboard UI Kit">
                 </a>
-                <br>
-                <h1 class="u-h3" style="color:#fff;text-align: center">Forgot your password</h1>
-                <p class="u-h6" style="color:#fff;text-align: center">
+                <h1 class="u-h3" style="color: #fff; text-align: center;margin-top:10%">Forgot your password</h1>
+                <p class="u-h6" style="color: #fff; text-align: center;">
                     Enter your email address to receive the instructions
                 </p>
-                <!-- <h1 class="u-h3 u-text-center u-mb-zero u-pt-medium" style="color:#fff">Welcome Back</h1> -->
             </header>
 
             <form class="c-card__body">
                 <div class="c-field u-mb-small">
-                    <label class="c-field__label" for="input1">Email Address:</label>
-                    <input class="c-input " type="email" id="email" placeholder="clark@dashboard.com">
-                    <small class="c-field__message u-color-danger " id="checkemail" style="display:none">
-                        <i class="fa fa-times-circle"></i>Please Enter Valid Email Address
+                    <label class="c-field__label" for="email">Email Address:</label>
+                    <input class="c-input" type="email" id="email" placeholder="clark@dashboard.com">
+                    <small class="c-field__message u-color-danger error-message" id="checkemail">
+                        <i class="fa fa-times-circle"></i> Please Enter a Valid Email Address
                     </small>
                 </div>
 
-
-
-                <a class="c-btn btn-color c-btn--fullwidth u-mt-small sendit" id="login" style="background: #4780E7;
-            color: #fff;text-decoration: none;border:0">Send
-                    Password Reset Instructions</a>
-
-                <!-- <span class="c-divider c-divider--small has-text u-mv-medium">Login via social networks</span>
-
-                <div class="o-line">
-                    <a class="c-icon u-bg-twitter" href="#!">
-                        <i class="fa fa-twitter"></i>
-                    </a>
-
-                    <a class="c-icon u-bg-facebook" href="#!">
-                        <i class="fa fa-facebook"></i>
-                    </a>
-
-                    <a class="c-icon u-bg-pinterest" href="#!">
-                        <i class="fa fa-pinterest"></i>
-                    </a>
-
-                    <a class="c-icon u-bg-dribbble" href="#!">
-                        <i class="fa fa-dribbble"></i>
-                    </a>
-                </div> -->
+                <button class="c-btn btn-color c-btn--fullwidth u-mt-small sendit" style="background: #4780E7; color: #fff; border: 0;">
+                    Send Password Reset Instructions
+                </button>
             </form>
         </div>
 
-
-        <!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
         <a class="u-text-mute u-text-small" href="/signup">
             Don’t have an account yet? Get Started
         </a>

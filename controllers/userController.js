@@ -9,6 +9,7 @@ const { stringify } = require('querystring');
 
 const fetch = require('node-fetch');
 const bodyParser = require('body-parser');
+const { body, validationResult } = require('express-validator');
 
 
 // GET REQUESTS
@@ -111,64 +112,69 @@ router.get('/logout', function(req, res) {
     res.redirect('/login');
 })
 
-// POST REQUESTS
-///////////////////////
-router.post('/subscribe', async(req, res) => {
-
-
-
-    let name = req.body.name;
-    let email = req.body.email;
-    let password = req.body.password;
-
-    console.log(req.body)
-    let hash = bcrypt.hashSync(password, 10);
-
-
-    let userObj = new User({
-        name: name,
-        email: email,
-        password: hash,
-        tap_account: true,
-        verification_key: uuid(),
-        is_active: true,
-        created_at: new Date(),
-        updated_at: new Date()
-
-    })
-
-
-
-    userObj.save(function(err1, result) {
-        if (err1) {
-            console.log('\n Error is1 - ' + err1)
-            res.status(400).send({
-                error: 'invalid credentials',
+router.post('/subscribe', 
+    // Validation middleware
+    [
+        body('name').notEmpty().withMessage('Name is required'),
+        body('email').isEmail().withMessage('Please enter a valid email address'),
+        body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ 
+                errors: errors.array(),
                 data: null,
-                message: 'Invalid Credentials'
-            })
-            res.end()
-        } else {
+                message: 'Validation failed'
+            });
+        }
 
-            console.log(result)
+        try {
+            const { name, email, password } = req.body;
+
+            console.log(req.body);
+
+            // Check if the email already exists
+            const existingUser = await User.findOne({ email }).exec();
+            if (existingUser) {
+                return res.status(400).send({
+                    error: 'email_exists',
+                    data: null,
+                    message: 'Email already exists'
+                });
+            }
+
+            const hash = bcrypt.hashSync(password, 10);
+
+            const userObj = new User({
+                name,
+                email,
+                password: hash,
+                tap_account: true,
+                verification_key: uuid(),
+                is_active: true,
+                created_at: new Date(),
+                updated_at: new Date()
+            });
+
+            const result = await userObj.save();
+
+            console.log(result);
             req.session.user = result;
             req.session.client = result;
             res.status(200).send({
                 data: 'success'
-            })
-            res.end()
+            });
+        } catch (err) {
+            console.error(`Error during signup process: ${err.message}`);
+            res.status(500).send({
+                error: 'internal_server_error',
+                data: null,
+                message: 'An error occurred during the signup process. Please try again later.'
+            });
         }
-    })
-
-
-
-
-    // If successful
-
-
-
-
-});
+    }
+);
 
 
 // ///////////
@@ -812,57 +818,66 @@ function welcometemplate(name) {
     return myvar;
 }
 
-router.post('/login', function(req, res) {
-    let url = req.url
-
-    let email = req.body.email
-    let password = req.body.password
-
-
-    console.log(req.body);
-
-    User.findOne({
-        'email': email
-    }).exec(function(err, user) {
-        if (user == null) {
-            console.log(url + '\n Error is - ' + 'Invalid Credentials')
-            res.status(400).send({
-                error: 'invalid credentials',
+router.post('/login', 
+    // Validation middleware
+    [
+        body('email').isEmail().withMessage('Please enter a valid email address'),
+        body('password').notEmpty().withMessage('Password cannot be empty')
+    ],
+    async function(req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ 
+                errors: errors.array(),
                 data: null,
-                message: 'Invalid Credentials'
-            })
-            res.end()
-        } else {
-
-            console.log(user, "result")
-
-            bcrypt.compare(password, user.password, function(err1, result) {
-                if (result == true) {
-                    // delete user[password];
-                    // let payload = { subject : user._id };
-                    // let token = jwt.sign(payload,'rahasyam#18');
-                    // console.log(token);
-                    // res.status(200).send({ data: token });
-                    req.session.user = user;
-                    req.session.client = user;
-
-                    res.status(200).send({
-                        data: user._id
-                    })
-                    res.end()
-                } else {
-                    console.log(url + '\n Error is - ' + 'Invalid Credentials')
-                    res.status(400).send({
-                        error: 'invalid credentials',
-                        data: null,
-                        message: 'Invalid Credentials'
-                    })
-                    res.end()
-                }
-            })
+                message: 'Validation failed'
+            });
         }
-    })
-})
+
+        try {
+            const url = req.url;
+            const { email, password } = req.body;
+
+            console.log(req.body);
+
+            const user = await User.findOne({ email }).exec();
+            if (!user) {
+                console.error(`${url}\n Error is - Invalid Credentials`);
+                return res.status(400).send({
+                    error: 'invalid credentials',
+                    data: null,
+                    message: 'Invalid Credentials'
+                });
+            }
+
+            console.log(user, "result");
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+                console.error(`${url}\n Error is - Invalid Credentials`);
+                return res.status(400).send({
+                    error: 'invalid credentials',
+                    data: null,
+                    message: 'Invalid Credentials'
+                });
+            }
+
+            req.session.user = user;
+            req.session.client = user;
+
+            res.status(200).send({
+                data: user._id
+            });
+        } catch (err) {
+            console.error(`Error during login process: ${err.message}`);
+            res.status(500).send({
+                error: 'internal_server_error',
+                data: null,
+                message: 'An error occurred during the login process. Please try again later.'
+            });
+        }
+    }
+);
 
 function requireLogin(req, res, next) {
     if (!req.session.user) {
@@ -979,93 +994,83 @@ router.post('/verifyresetpwd1', function(req, res) {
         res.end()
     }
 })
-router.post('/sendforgotemail', function(req, res) {
-    console.log("dumb");
-    let email = req.body.email;
-
-    User.findOne({
-        'email': email
-    }).exec(function(err, user) {
-        if (user != null) {
-            console.log('Customer password Reset Key - ' + user.verification_key)
-            user.updated_at = new Date()
-            user.verification_key = uuid();
-
-            user.save(function(err, result) {
-                if (err) {
-                    console.log(url + '\n Error is - ' + err)
-                    res.status(501).send({
-                        error: 'email does not exist',
-                        data: null,
-                        message: 'Invalid Email'
-                    })
-                    res.end()
-                } else {
-                    console.log('Reset Password called - ' + result.verification_key)
-
-                    // Send email with verification link
-
-                    ////////////////////////////
-                    // let fromEmail = 'webbooking@vijayadiagnostic.in';
-                    // let toCustomerEmail = ['tapshort123@gmail.com']; //enter customer email here
-
-                    // let customerEmailSubject = 'Vijaya Diagnostic Centre - Offer Enquiry Submitted';
-                    // let ccEmail = [];
-                    // let prin = gettemplate();
-                    // // sendEmail(fromEmail, toCustomerEmail, ccEmail, customerEmailSubject, customer);
-                    // sendEmail(fromEmail, toCustomerEmail, ccEmail, customerEmailSubject, prin);
-
-
-                    let transporter = nodemailer.createTransport({
-                        host: "smtp.mailtrap.io",
-                        port: 2525,
-                        auth: {
-                            user: "40256c8d99023f",
-                            pass: "8cd401ea784acd"
-                        }
-                    });
-                    let template = gettemplate(result.name, result.verification_key);
-                    const mailOptions = {
-                        from: '"Test Server" <test@example.com>',
-                        to: result.email,
-                        subject: "Email Test",
-                        text: 'text email',
-                        html: template
-                    };
-
-                    transporter.sendMail(mailOptions, (err, info) => {
-                        if (err) {
-                            console.log(err);
-                            return next(err);
-                        }
-                        console.log("Info: ", info);
-                        res.json({
-                            message: "Email successfully sent."
-                        });
-                    });
-                    /////////////////////
-
-
-                    res.status(200).send({
-                        data: "please check your email to verify"
-                    })
-                    res.end()
-                }
-            })
-        } else {
-            res.status(501).send({
-                error: 'Sorry!! the email doesnt exist',
+router.post('/sendforgotemail', 
+    // Validation middleware
+    [
+        body('email').isEmail().withMessage('Please enter a valid email address')
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ 
+                errors: errors.array(),
                 data: null,
-                message: 'Sorry!! the email doesnt exist'
-            })
-            res.end()
+                message: 'Validation failed'
+            });
         }
 
-    });
+        const email = req.body.email;
 
+        try {
+            const user = await User.findOne({ email }).exec();
+            if (!user) {
+                return res.status(404).send({
+                    error: 'email_not_found',
+                    data: null,
+                    message: 'Sorry!! the email doesn\'t exist'
+                });
+            }
 
-});
+            console.log('Customer password Reset Key - ' + user.verification_key);
+            user.updated_at = new Date();
+            user.verification_key = uuid();
 
+            const result = await user.save();
+            console.log('Reset Password called - ' + result.verification_key);
+
+            // Send email with verification link
+            const transporter = nodemailer.createTransport({
+                host: "smtp.mailtrap.io",
+                port: 2525,
+                auth: {
+                    user: "40256c8d99023f",
+                    pass: "8cd401ea784acd"
+                }
+            });
+
+            const template = gettemplate(result.name, result.verification_key);
+            const mailOptions = {
+                from: '"Test Server" <test@example.com>',
+                to: result.email,
+                subject: "Password Reset",
+                text: 'Please use the following link to reset your password.',
+                html: template
+            };
+
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    console.error('Error sending email: ', err);
+                    return res.status(500).send({
+                        error: 'email_send_failed',
+                        data: null,
+                        message: 'Failed to send email. Please try again later.'
+                    });
+                }
+                console.log("Info: ", info);
+                res.status(200).send({
+                    message: "Email successfully sent. Please check your email to verify."
+                });
+            });
+        } catch (err) {
+            console.error(`Error during forgot password process: ${err.message}`);
+            res.status(500).send({
+                error: 'internal_server_error',
+                data: null,
+                message: 'An error occurred during the forgot password process. Please try again later.'
+            });
+        }
+    }
+);
 
 // FIXME EMAIL
 

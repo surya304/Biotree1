@@ -703,11 +703,14 @@ finalData._id = data._id;
                 url: '/create-instabio',
                 success: function (data) {
 
-                    $("#success-url").text("biotree.one/link/" + shortUrlCode);
-                    $("#success-url2").val("biotree.one/link/" + shortUrlCode);
+
+                    const succesMessage = `Your Instabio has been created successfully. `;
+                
 
 
-                    $("#success-modal").trigger("click");
+ document.getElementById('success-message').innerHTML = succesMessage;
+
+                        $("#success-modal").trigger("click");
                 }
             });
         }
@@ -760,9 +763,10 @@ finalData._id = data._id;
                 url: '/update-instabio',
                 success: function (data) {
 
-                    $("#success-url").text("biotree.one/link/" + shortUrlCode);
-                    $("#success-url2").val("biotree.one/link/" + shortUrlCode);
+                
+                    const succesMessage= `Your Instabio has been updated successfully. `;
 
+                    document.getElementById('success-message').innerHTML = succesMessage;
 
                     $("#success-modal").trigger("click");
                 }
