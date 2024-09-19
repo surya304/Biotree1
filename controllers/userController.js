@@ -6,11 +6,13 @@ let uuid = require('uuid/v4')
 let bcrypt = require('bcryptjs')
 let request = require('request')
 const { stringify } = require('querystring');
+const crypto = require('crypto');
 
 const fetch = require('node-fetch');
 const bodyParser = require('body-parser');
 const { body, validationResult } = require('express-validator');
-
+const { MailtrapClient } = require("mailtrap");
+require('dotenv').config();
 
 // GET REQUESTS
 
@@ -994,83 +996,63 @@ router.post('/verifyresetpwd1', function(req, res) {
         res.end()
     }
 })
-router.post('/sendforgotemail', 
-    // Validation middleware
-    [
-        body('email').isEmail().withMessage('Please enter a valid email address')
-    ],
-    async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ 
-                errors: errors.array(),
-                data: null,
-                message: 'Validation failed'
-            });
-        }
 
-        const email = req.body.email;
 
-        try {
-            const user = await User.findOne({ email }).exec();
-            if (!user) {
-                return res.status(404).send({
-                    error: 'email_not_found',
-                    data: null,
-                    message: 'Sorry!! the email doesn\'t exist'
-                });
-            }
+const TOKEN = process.env.SMTP_PASS;
+const ENDPOINT = "https://send.api.mailtrap.io/";
 
-            console.log('Customer password Reset Key - ' + user.verification_key);
-            user.updated_at = new Date();
-            user.verification_key = uuid();
+const client = new MailtrapClient({ endpoint: ENDPOINT, token: TOKEN });
 
-            const result = await user.save();
-            console.log('Reset Password called - ' + result.verification_key);
+const sender = {
+  email: "mailtrap@demomailtrap.com",
+  name: "Mailtrap Test",
+};
 
-            // Send email with verification link
-            const transporter = nodemailer.createTransport({
-                host: "smtp.mailtrap.io",
-                port: 2525,
-                auth: {
-                    user: "40256c8d99023f",
-                    pass: "8cd401ea784acd"
-                }
-            });
+router.post('/sendforgotemail', [
+  body('email').isEmail().withMessage('Enter a valid email address')
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-            const template = gettemplate(result.name, result.verification_key);
-            const mailOptions = {
-                from: '"Test Server" <test@example.com>',
-                to: result.email,
-                subject: "Password Reset",
-                text: 'Please use the following link to reset your password.',
-                html: template
-            };
-
-            transporter.sendMail(mailOptions, (err, info) => {
-                if (err) {
-                    console.error('Error sending email: ', err);
-                    return res.status(500).send({
-                        error: 'email_send_failed',
-                        data: null,
-                        message: 'Failed to send email. Please try again later.'
-                    });
-                }
-                console.log("Info: ", info);
-                res.status(200).send({
-                    message: "Email successfully sent. Please check your email to verify."
-                });
-            });
-        } catch (err) {
-            console.error(`Error during forgot password process: ${err.message}`);
-            res.status(500).send({
-                error: 'internal_server_error',
-                data: null,
-                message: 'An error occurred during the forgot password process. Please try again later.'
-            });
-        }
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(404).send('User not found');
     }
-);
+
+    // Generate a reset token
+    const token = crypto.randomBytes(20).toString('hex');
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    // Send reset email
+    const resetUrl = `${process.env.DOMAIN}/resetPassword/${token}`;
+    const recipients = [
+      {
+        email: user.email,
+      }
+    ];
+
+    await client.send({
+      from: sender,
+      to: recipients,
+      subject: "Password Reset Request",
+      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+             Please click on the following link, or paste this into your browser to complete the process:\n\n
+             ${resetUrl}\n\n
+             If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+      category: "Password Reset",
+    });
+
+    res.send('Password reset email sent');
+  } catch (error) {
+    console.error(error, "sendforgotemail error");
+    res.status(500).send('An error occurred');
+  }
+});
 
 // FIXME EMAIL
 

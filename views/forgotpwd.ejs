@@ -50,7 +50,7 @@
                     url: "/sendforgotemail",
                     data: { email },
                     success: function(response) {
-                        swal('Great!', response.message, 'success');
+                        swal('Great!', "Please Check Your Email To reset Password", 'success');
                     },
                     error: function(xhr) {
                         const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'An error occurred';
