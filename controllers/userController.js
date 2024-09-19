@@ -35,8 +35,8 @@ router.get('/forgot-password', function(req, res) {
 router.get('/add-new-password', function(req, res) {
     res.render('add-new-password', {})
 });
-router.get('/resetpwd', function(req, res) {
-    res.render('verifyresetpwd', {})
+router.get('/resetpassword/:id', function(req, res) {
+    res.render('resetPassword', {})
 });
 
 
@@ -892,111 +892,43 @@ function requireLogin(req, res, next) {
 
 
 
-router.post('/resetpwd', function(req, res) {
-    let url = req.url
-
-    let email = req.body.email
-
-    User.findOne({
-        'email': email
-    }).exec(function(err, user) {
-        if (user != null) {
-            user.verification_key = uuid(),
-                console.log('Customer password Reset Key - ' + user.verification_key)
-            user.updated_at = new Date()
-
-            user.save(function(err, result) {
-                if (err) {
-                    console.log(url + '\n Error is - ' + err)
-                    res.status(501).send({
-                        error: 'email does not exist',
-                        data: null,
-                        message: 'Invalid Email'
-                    })
-                    res.end()
-                } else {
-                    console.log('Reset Password called - ' + result.verification_key)
-
-                    // Send email with verification link
-                    let emailContent = '<h1>Reset Lytboard Password</h1><br>Please click on the below link to reset your password. <br><br><a href="' + config.server.domain + config.server.port + '\/resetpwd?key=' + result.verification_key + '">Verify</a><br><br><a href="{unsubscribe}">Unsubscribe</a>'
 
 
+router.post('/setnewpassword', async function(req, res) {
+    const { password, key } = req.body;
 
-                    let message = 'Reset link has been sent to your email. Please follow the instructions to reset your password.'
-                    res.status(200).send({
-                        data: message
-                    })
-                    res.end()
-                }
-            })
-        } else {
-            console.log(url + '\n Error is - ' + 'Reset Called on unregistered email')
-            res.status(501).send({
-                error: 'email does not exist',
-                data: null,
-                message: 'Invalid Email'
-            })
-            res.end()
-        }
-    })
-})
-
-router.post('/verifyresetpwd1', function(req, res) {
-    let url = req.url
-
-    let key = req.body.key
-    let password = req.body.password
-    let newpassword = req.body.newpassword
-
-    if (password === newpassword) {
-        let hash = bcrypt.hashSync(password, 10)
-
-        User.findOne({
-            'verification_key': key
-        }).exec(function(err, user) {
-            console.log(user)
-
-            if (user != null) {
-                user.verification_key = uuid();
-                user.password = hash
-
-                user.save(function(err1, result) {
-                    if (err1) {
-                        console.log(url + '\n Error is - ' + err1)
-                        res.status(501).send({
-                            error: 'invalid url',
-                            data: null,
-                            message: 'Password update failed. Please try again.'
-                        })
-                        res.end()
-                    } else {
-                        res.status(200).send({
-                            data: 'Password updated successfully. Please login to continue'
-                        })
-                        res.end()
-                    }
-                })
-            } else {
-                console.log(url + '\n Error is - ' + err)
-                res.status(501).send({
-                    error: 'invalid url',
-                    data: null,
-                    message: 'Password update failed. Please try again.'
-                })
-                res.end()
-            }
-        })
-    } else {
-        console.log(url + '\n Error is - Passwords donot match')
-        res.status(501).send({
-            error: 'passwords donot match url',
-            data: null,
-            message: 'Passwords do not match. Please try again.'
-        })
-        res.end()
+    // Validate password complexity
+    if (password.length < 8) {
+        return res.status(400).json({ message: 'Password must be at least 8 characters long' });
     }
-})
+    if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+        return res.status(400).json({ message: 'Password must contain both letters and numbers' });
+    }
 
+
+    console.log(req.body,"setnewpassword req.body");
+    
+    try {
+        // Find the user by the key
+        const user = await User.findOne({ verification_key: key });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid or expired key' });
+        }
+
+        // Hash the new password
+        const hashedPassword = bcrypt.hashSync(password, 10);
+
+        // Update the user's password
+        user.password = hashedPassword;
+        user.verification_key = undefined; // Clear the reset key
+        await user.save();
+
+        res.status(200).json({ message: 'Password has been reset successfully' });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).json({ message: 'An error occurred while resetting the password' });
+    }
+});
 
 const TOKEN = process.env.SMTP_PASS;
 const ENDPOINT = "https://send.api.mailtrap.io/";
@@ -1024,17 +956,17 @@ router.post('/sendforgotemail', [
 
     // Generate a reset token
     const token = crypto.randomBytes(20).toString('hex');
-    user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    user.verification_key = token;
     await user.save();
 
     // Send reset email
-    const resetUrl = `${process.env.DOMAIN}/resetPassword/${token}`;
+    const resetUrl = `${process.env.DOMAIN}/resetpassword/${token}`;
     const recipients = [
       {
         email: user.email,
       }
     ];
+    const htmlTemplate = gettemplate(user.name, resetUrl); // Pass user's name and reset URL to the template
 
     await client.send({
       from: sender,
@@ -1044,6 +976,8 @@ router.post('/sendforgotemail', [
              Please click on the following link, or paste this into your browser to complete the process:\n\n
              ${resetUrl}\n\n
              If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+             html: htmlTemplate, // Send the HTML version of the email
+
       category: "Password Reset",
     });
 
@@ -1055,7 +989,7 @@ router.post('/sendforgotemail', [
 });
 
 
-function gettemplate(name, key) {
+function gettemplate(name, resetUrl) {
 
     let $temp = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -1066,7 +1000,6 @@ function gettemplate(name, key) {
     <meta name="viewport" content="width=device-width" />
     <title>NoticeLab 13 | Email Template</title>
     <style type="text/css">
-        /*////// RESET STYLES //////*/
         
         body {
             height: 100% !important;
@@ -1315,8 +1248,8 @@ function gettemplate(name, key) {
                             <table class="no_float" align="center" border="0" cellspacing="0" cellpadding="0">
                                 <tr>
                                     <td class="editable-img" align="left">
-                                        <a href="#">
-                                            <img editable="true" class="centerize" mc:edit="image101" src="./images/gm-logo-08.png" style="display:block; line-height:0; font-size:0; border:0; width:175px;" border="0" alt="image" />
+                                        <a href="https://biotree.onrender.com">
+                                            <img editable="true" class="centerize" mc:edit="image101" src="https://mybucket4345.s3.us-east-2.amazonaws.com/biotree_logo.png" style="display:block; line-height:0; font-size:0; border:0; width:175px;" border="0" alt="image" />
                                         </a>
                                     </td>
                                 </tr>
@@ -1359,7 +1292,7 @@ function gettemplate(name, key) {
                                 <tr>
                                     <td align="center" mc:edit="text102" class="text_color_c6c6c6" style="line-height: 1.8;color: #525252; font-size: 15px; font-weight: 500; font-family: 'Open Sans', Helvetica, sans-serif; mso-line-height-rule: exactly;">
                                         <div class="editable-text">
-                                            <span class="text_container">We received a request to reset your password for your Tapshort account</span>
+                                            <span class="text_container">We received a request to reset your password for your Biotree account</span>
                                         </div>
                                     </td>
                                 </tr>
@@ -1382,15 +1315,6 @@ function gettemplate(name, key) {
                                     <td height="40"></td>
                                 </tr>
 
-                                <!-- main-img -->
-                                <tr>
-                                    <td class="editable-img" align="center">
-                                        <a href="#">
-                                            <img editable="true" mc:edit="image105" src="./images/img-ebook.png" style="display:block; line-height:0; font-size:0; border:0;" border="0" alt="image" />
-                                        </a>
-                                    </td>
-                                </tr>
-                                <!-- END main-img -->
 
                                 <!-- horizontal gap -->
                                 <tr>
@@ -1405,11 +1329,11 @@ function gettemplate(name, key) {
 
                                                 <td>
 
-                                                    <a href="http://localhost:5000/resetpwd?key=${key}" target="_blank" class="button button-blue button-bordered doc_button">
-                                                        <span class="button--inner">Change Password</span>
+                                                    <a href="${resetUrl}" target="_blank" class="button button-blue button-bordered doc_button">
+                                                        <span class="button--inner" style="color:#fff">Change Password</span>
                                                     </a>
 
-                                                </td> -->
+                                                </td> 
                                             </tr>
                                         </table>
                                     </td>
@@ -1448,7 +1372,7 @@ function gettemplate(name, key) {
                                 <tr>
                                     <td align="" mc:edit="text104" class="text_color_c6c6c6" style="line-height: 1;color: #c6c6c6; font-size: 14px; font-weight: 400; font-family: 'Open Sans', Helvetica, sans-serif; mso-line-height-rule: exactly;">
                                         <div class="editable-text">
-                                            <span class="text_container">&copy; 2018 Tapshort. All Rights Reserved.</span>
+                                            <span class="text_container">&copy; 2024 BioTree.</span>
                                         </div>
                                     </td>
                                 </tr>
