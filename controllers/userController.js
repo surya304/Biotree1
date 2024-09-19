@@ -1054,7 +1054,6 @@ router.post('/sendforgotemail', [
   }
 });
 
-// FIXME EMAIL
 
 function gettemplate(name, key) {
 
