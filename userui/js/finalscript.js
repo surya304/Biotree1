@@ -135,14 +135,14 @@ $(function () {
 
 
 
-
+// links sortaboe Method
     $("#sortable1")
     .sortable({
         revert: true,
         connectWith: ".sortable",
         stop: function(event, ui) {
 
-            bindDatatoView1();
+            sortLinkData();
 
 
 
@@ -151,6 +151,20 @@ $(function () {
 
 
     });
+
+    function  sortLinkData() {
+        let sortedData = [];
+        $('#sortable1 .sortableitem').each(function (index, element) {
+            const id = $(element).data('id');
+            const item = finalData.links.find(item => item.id === id);
+            sortedData.push(item);
+        });
+        console.log(sortedData, "sortedData");
+        
+        finalData.links = sortedData;
+        bindDatatoView1();
+
+    }
 
     $("#sortable")
     .sortable({
@@ -159,13 +173,24 @@ $(function () {
         stop: function(event, ui) {
 
 
-
-            bindDatatoView1();
+sortSocialMediaData();
 
         }
 
 
     });
+
+    function  sortSocialMediaData() {
+        let sortedData = [];
+        $('#sortable .sortableitem').each(function (index, element) {
+            const id = $(element).data('id');
+            const item = finalData.socialmedia.find(item => item.id === id);
+            sortedData.push(item);
+        });
+
+        finalData.socialmedia = sortedData;
+        bindDatatoView1();
+    }
 
 
     function bindEditData(data) {
@@ -740,13 +765,16 @@ finalData._id = data._id;
                 success: function (data) {
 
 
-                    const succesMessage = `Your Instabio has been created successfully. `;
-                
-
-
- document.getElementById('success-message').innerHTML = succesMessage;
-
-                        $("#success-modal").trigger("click");
+                    swal({
+                        title: 'Success!',
+                        text: 'Your Instabio has been created successfully.',
+                        icon: 'success',
+                        button: 'OK'
+                    }).then((value) => {
+                        if (value) {
+                            window.location.href = '/link/' + finalData.shortcode;
+                        }
+                    });
                 }
             });
         }
@@ -799,12 +827,23 @@ finalData._id = data._id;
                 url: '/update-instabio',
                 success: function (data) {
 
-                
-                    const succesMessage= `Your Instabio has been updated successfully. `;
+                 
 
-                    document.getElementById('success-message').innerHTML = succesMessage;
+                    swal({
+                        title: 'Success!',
+                        text: 'Your Instabio has been updated successfully.',
+                        icon: 'success',
+                        button: 'OK'
+                    }).then((value) => {
+                        if (value) {
+                            window.location.href = '/dashboard';
+                        }
+                    });
+                    // const succesMessage= `Your Instabio has been updated successfully. `;
 
-                    $("#success-modal").trigger("click");
+                    // document.getElementById('success-message').innerHTML = succesMessage;
+
+                    // $("#success-modal").trigger("click");
                 }
             });
         }

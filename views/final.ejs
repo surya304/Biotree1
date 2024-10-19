@@ -24,7 +24,7 @@
             </div>
             <div class="flex-name"><div><%=name%></div></div>
             <div class="flex-bio"><div><%=bio%></div></div>
-            <div class="button-area rectangle"></div>
+            <div class="button-area rectangle "></div>
             <div class="button-area1 rectangle">
                 <% links.forEach(function(link) { %>
                     <a href="<%=link.link%>"><%=link.title%></a>
@@ -62,7 +62,7 @@
             if (fromdata === "instabio") {
                 sociallists.forEach(function(social) {
                     let finalurl = social.url + social.username;
-                    let listItemToAdda = `<a href="${finalurl}"><i class="${social.icon}" data-id="${social.id}"></i></a>`;
+                    let listItemToAdda = `<a class="socialmedia" href="${finalurl}"><i class="${social.icon}" data-id="${social.id}"></i></a>`;
                     $('.button-area').append(listItemToAdda);
                 });
             }
