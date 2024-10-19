@@ -13,6 +13,8 @@ const bodyParser = require('body-parser');
 const { body, validationResult } = require('express-validator');
 const { MailtrapClient } = require("mailtrap");
 require('dotenv').config();
+const Mixpanel = require('mixpanel');
+const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
 
 // GET REQUESTS
 
@@ -32,6 +34,7 @@ router.get('/signup', function(req, res) {
 router.get('/forgot-password', function(req, res) {
     res.render('forgotpwd', {})
 });
+
 router.get('/add-new-password', function(req, res) {
     res.render('add-new-password', {})
 });
@@ -164,6 +167,13 @@ router.post('/subscribe',
             console.log(result);
             req.session.user = result;
             req.session.client = result;
+
+
+            mixpanel.track('User Signup', {
+                distinct_id: result._id, // Unique identifier for the user
+                email: result.email,
+            });
+            
             res.status(200).send({
                 data: 'success'
             });
@@ -866,6 +876,11 @@ router.post('/login',
 
             req.session.user = user;
             req.session.client = user;
+
+            mixpanel.track('User Login', {
+                distinct_id: user._id, // Unique identifier for the user
+                email: user.email,
+            });
 
             res.status(200).send({
                 data: user._id

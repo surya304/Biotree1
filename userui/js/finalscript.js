@@ -547,6 +547,11 @@ finalData._id = data._id;
         const colorID = $(this).attr('id');
 
         bindColors(colorID)
+
+        mixpanel.track("Color Change", {
+            color: colorID
+        });
+
     });
 
     function bindColors(colorID) {

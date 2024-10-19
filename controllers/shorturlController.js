@@ -14,6 +14,8 @@ let randomize = require('randomatic')
 let moment = require('moment')
 let async = require('async')
 
+const Mixpanel = require('mixpanel');
+const mixpanel = Mixpanel.init(process.env.MIXPANEL_TOKEN);
 
 
 /// ////////////////////////////////////////////////
@@ -83,6 +85,10 @@ router.get('/create-shorturl/', requireLogin, function(req, res) {
                                 {
                                     //
 
+
+                                    mixpanel.track('Create Short URL Page View', {
+                                        distinct_id: req.session.user._id,
+                                    });
 
 
                                     res.render('create-shorturl', {
@@ -180,6 +186,10 @@ router.post('/create-instabio', requireLogin, function(req, res) {
             console.log('Insta Bio Created')
             let client_id = result._id
 
+
+            mixpanel.track('Insta Bio Created', {
+                distinct_id: req.session.user._id,
+            });
             res.status(200).send({
                 data: 'Insta Bio Added Successfully'
             })
@@ -226,70 +236,29 @@ router.post('/getclientcount', requireLogin, function(req, res) {
 
             }
         })
-    })
+    });
+
     // FIXME Dashboard
 
-router.get('/dashboard', requireLogin, function(req, res) {
-    let userid = req.session.user._id;
-
-    // Client.find({
-    //     is_del: false,
-    //     user: userid
-    // }).populate('client').exec(function(err, clientsList) {
-    //     if (err) {
-    //         console.log(url + '\n Error is - ' + err)
-    //         res.status(501).send({
-    //             error: 'Client Search Error',
-    //             data: null,
-    //             message: 'Oops! Please try again'
-    //         })
-    //         res.end()
-    //     } else {
-    //         let count = clientsList.length
-    //         let newClientsList = [];
-    //         console.log(count);
-    //         if (count > 0) {
-    //             res.redirect('/dashboard/' + clientsList[0]._id);
-    //         } else {
-    //             res.redirect('/steps');
-
-    //         }
-    //     }
-    // })
-
-
-
-
-
-    Tracking.find({
-        is_del: false
-    }, function(errTracking, trackingResult) {
-        UserShortURL.find({
-            is_del: false,
-            user: userid
-        }, function(errShorturl, shorturlsList) {
-            // console.log(trackingResult, "trackingResult");
-            // console.log(shorturlsList, "shorturlsList");
-            // ///////////////////////
+    router.get('/dashboard', requireLogin, function(req, res) {
+        const userId = req.session.user._id;
+    
+        UserShortURL.find({ is_del: false, user: userId }, function(err, shorturlsList) {
+            if (err) {
+                return res.status(500).send('Error retrieving short URLs');
+            }
+    
+// mixpanel event for dashboard page view
+          mixpanel.track('Dashboard Page View', {
+            distinct_id: userId,
+            });
 
             res.render('dashboard', {
                 moment: moment,
-                trackingList: trackingResult,
                 shorturlsList: shorturlsList,
-            })
-
-
-
-            // ///////////////////////
-
-
-
-        })
-    })
-
-
-
-})
+            });
+        });
+    });
 
 
 // //////////////////////////
