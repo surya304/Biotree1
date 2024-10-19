@@ -135,6 +135,39 @@ $(function () {
 
 
 
+
+    $("#sortable1")
+    .sortable({
+        revert: true,
+        connectWith: ".sortable",
+        stop: function(event, ui) {
+
+            bindDatatoView1();
+
+
+
+
+        }
+
+
+    });
+
+    $("#sortable")
+    .sortable({
+        revert: true,
+        connectWith: ".sortable",
+        stop: function(event, ui) {
+
+
+
+            bindDatatoView1();
+
+        }
+
+
+    });
+
+
     function bindEditData(data) {
 
         const { title, bio, bg_color, rounded_border, dashimg, shortcode, socialmedia, links } = data;
@@ -548,9 +581,7 @@ finalData._id = data._id;
 
         bindColors(colorID)
 
-        mixpanel.track("Color Change", {
-            color: colorID
-        });
+     
 
     });
 
