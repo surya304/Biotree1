@@ -88,10 +88,12 @@ $(function () {
     const $flexName = $('.flex-name, .flex-name1');
     const $flexBio = $('.flex-bio');
     const $buttonArea = $('.button-area, .button-area1');
-    const $image = $(".item-img-output");
+    const $image = $(".previewimage");
+
     const $secondSwitch = $("#secondswitch");
     const $socialMediaContainer = $("#socialMediaContainer");
     const $SociallinkContainer = $("#sortable");
+    const $DeleteImageButton = $(".deleteimage");
 
     let $LinkInputContainer = $('#sortable1');
     if (currentUrl.includes('instabio')) {
@@ -180,6 +182,13 @@ sortSocialMediaData();
 
     });
 
+
+    $DeleteImageButton.on('click', function () {
+        $image.attr('src', 'https://mybucket4345.s3.us-east-2.amazonaws.com/uploads/1725020388275.jpeg');
+        // bindDatatoView1();
+    });
+
+
     function  sortSocialMediaData() {
         let sortedData = [];
         $('#sortable .sortableitem').each(function (index, element) {
@@ -247,15 +256,27 @@ finalData._id = data._id;
         // This function binds to the view and the Forms 
         bindDataInitial();
         function bindDataInitial() {
-            $bioname.val(InitialData.title);
-            $bio.val(InitialData.bio);
-            $roundedBorder.val(InitialData.rounded_border);
-            $phoneBodyInternal.attr('id', InitialData.bg_color);
-            $image.attr('src', InitialData.dashimg);
-            bindColors(InitialData.bg_color)
-
-            // create a shortcode for the user
-            $('.checkshort').val(InitialData.shortcode);
+            if ($bioname.length) {
+                $bioname.val(InitialData.title);
+            }
+            if ($bio.length) {
+                $bio.val(InitialData.bio);
+            }
+            if ($roundedBorder.length) {
+                $roundedBorder.val(InitialData.rounded_border);
+            }
+            if ($phoneBodyInternal.length) {
+                $phoneBodyInternal.attr('id', InitialData.bg_color);
+            }
+            if ($image.length) {
+                console.log($image, "image");
+                $image.attr('src', InitialData.dashimg);
+            }
+            if ($('.checkshort').length) {
+                $('.checkshort').val(InitialData.shortcode);
+            }
+    
+            bindColors(InitialData.bg_color);
 
 
             finalData.title = InitialData.title;
@@ -720,6 +741,7 @@ finalData._id = data._id;
 
         finalData.dashimg = $image.attr('src');
 
+
         let errors = [];
         console.log(finalData, "finalData");
 
@@ -751,6 +773,13 @@ finalData._id = data._id;
             errors.push("-> Please enter at least 5 shortUrl characters.");
         }
 
+        // Bind Image
+        if (!finalData.dashimg) {
+            errors.push("-> Please upload an image.");
+        }
+
+
+
         // Display errors or proceed with form submission
         if (errors.length > 0) {
             swal("Oops...", errors.join("\n"), "error");
@@ -758,6 +787,8 @@ finalData._id = data._id;
             finalData.shortcode = shortUrlCode;
 
             // Proceed with form submission
+
+            console.log(finalData, "finalData");
             $.ajax({
                 type: 'POST',
                 data: finalData,

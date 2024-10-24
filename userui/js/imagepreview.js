@@ -57,6 +57,11 @@ $('#cropImageBtn').on('click', function(ev) {
 });
 
 function uploadImageToS3(base64Image) {
+
+    // const imageElement = document.querySelector('.previewimage');
+    // console.log(imageElement,"imageElement");
+    // imageElement.src = "https://mybucket4345.s3.us-east-2.amazonaws.com/uploads/1725020388275.jpeg";
+    
     $.ajax({
         url: '/upload-to-s3',
         type: 'POST',
@@ -64,15 +69,21 @@ function uploadImageToS3(base64Image) {
         contentType: 'application/json',
         success: function(response) {
             console.log('Image uploaded successfully:', response);
-            $('.flex-image').empty();
-            $('.flex-image').append(`<div><img src="${response.imageUrl}" class="roundimage mx-auto d-block" id="item-img-output" /></div>`);
+            // $('.flex-image').empty();
+            // $('.flex-image').append(`<div><img src="${response.imageUrl}" class="roundimage mx-auto d-block" id="phoneBodyInternalImage" /></div>`);
             
+            $('.previewimage').attr('src', response.imageUrl);
+
+
             // Handle success (e.g., display the uploaded image URL)
             console.log('Image uploaded successfully:', response.imageUrl);
         },
         error: function(error) {
             console.error('Error uploading image:', error);
         }
+
     });
+    // $('.previewimage').attr('src', response.imageUrl);
+
 }
 // End upload preview image
