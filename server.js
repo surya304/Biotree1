@@ -13,6 +13,7 @@ let cookieParser = require('cookie-parser');
 let request = require('request');
 let helmet = require('helmet')
 let router = express.Router();
+const path = require('path');
 
 
 
@@ -26,7 +27,7 @@ let parseForm = bodyParser.urlencoded({
 });
 
 
-
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(session({
     cookieName: 'session',
