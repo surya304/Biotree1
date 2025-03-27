@@ -1,4 +1,7 @@
 // Start upload preview image
+// This is the code for the image preview and crop functionality for the profile picture upload 
+
+
 $(".gambar").attr("src", "https://user.gadjian.com/static/images/personnel_boy.png");
 let $uploadCrop,
     tempFilename,

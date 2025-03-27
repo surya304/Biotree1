@@ -78,36 +78,34 @@ router.post('/forgotpassword', async function (req, res) {
 
 
 
-router.get('/profile', requireLogin, function(req, res) {
+router.get('/profile', requireLogin, async (req, res) => {
+    try {
+        const userId = req.session.user._id;
+        const user = await User.findById(userId);
 
-
-    let url = req.url
-    let userid = req.session.user._id
-    User.findById(userid, function(err, data) {
-
-        if (err) {
-            console.log(url + '\n Error is - ' + err)
-            res.status(501).send({
-                error: 'Client Search Error',
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found',
                 data: null,
-                message: 'Oops! Please try again'
-            })
-            res.end()
-        } else {
-
-
-
-            res.render('profile', {
-
-                "profilename": data.name,
-                "email": data.email,
-                "is_social": data.is_social
-
-
-            })
+                message: 'Unable to find user profile'
+            });
         }
-    })
-})
+
+        res.render('profile', {
+            profilename: user.name,
+            email: user.email,
+            is_social: user.is_social
+        });
+
+    } catch (error) {
+        console.error(`Error in /profile route: ${error.message}`);
+        res.status(500).json({
+            error: 'Internal Server Error',
+            data: null, 
+            message: 'Something went wrong. Please try again.'
+        });
+    }
+});
 
 router.get('/logout', function(req, res) {
     req.session.reset()
@@ -183,134 +181,82 @@ router.post('/subscribe',
 
 
 // ///////////
-router.post('/signup', function(req, res) {
+router.post('/signup', async (req, res) => {
+    try {
+        // Extract required fields from request body
+        const { name, email, password, is_social } = req.body;
+        const url = req.url;
 
+        // Validate required fields
+        if (!name || !email || !password || typeof is_social === 'undefined') {
+            return res.status(400).send({
+                error: 'missing_fields',
+                data: null,
+                message: 'Please provide all required fields'
+            });
+        }
+        
 
-    // ////////////
-    let url = req.url
-    let name = req.body.name
-    let email = req.body.email
-    let password = req.body.password
-    let hash = bcrypt.hashSync(password, 10);
-    let is_social = req.body.is_social;
-    let captcha = req.body.captcha;
+        // Hash password synchronously
+        const hash = bcrypt.hashSync(password, 10);
+        
+        // Determine account type based on social signup flag
+        const tap_account = !is_social;  // Reverse social flag for tap account
+        console.log(`Signup attempt for ${email} (Social: ${is_social})`);
 
-    console.log(is_social, "is_social");
+        // Check for existing user first
+        const existingUser = await User.findOne({ email }).exec();
+        
+        // Handle existing user cases
+        if (existingUser) {
+            if (is_social) {
+                // Social signup: Return existing user data
+                console.log(`Social signup with existing email: ${email}`);
+                req.session.user = existingUser;
+                return res.status(200).send({ data: existingUser });
+            }
+            // Regular signup: Prevent duplicate registration
+            console.log(`Duplicate registration attempt: ${email}`);
+            return res.status(400).send({
+                error: 'user_exists',
+                data: null,
+                message: 'Account already exists. Please login instead.'
+            });
+        }
 
-
-    if (is_social = true) {
-        let tap_account = false;
-        let userObj = new User({
-            name: name,
-            email: email,
+        // Create new user object
+        const userObj = new User({
+            name,
+            email,
             password: hash,
-            is_social: is_social,
-            tap_account: tap_account,
+            is_social,
+            tap_account,
             verification_key: uuid(),
             is_active: true,
             created_at: new Date(),
             updated_at: new Date()
+        });
 
-        })
-        console.log("true");
-        User.findOne({
-            'email': email
-        }).exec(function(err, user) {
-            console.log(url + '\n Error is1 - ' + err)
+        // Save new user to database
+        const newUser = await userObj.save();
+        const userResponse = newUser.toObject();
 
-            if (user == null) {
-                userObj.save(function(err1, result) {
-                    if (err1) {
-                        console.log(url + '\n Error is1 - ' + err1)
-                        res.status(400).send({
-                            error: 'invalid credentials',
-                            data: null,
-                            message: 'Invalid Credentials'
-                        })
-                        res.end()
-                    } else {
-                        console.log(result + '\n err1 is1 - ')
+        // Set session and return success response
+        req.session.user = userResponse;
+        res.status(201).send({
+            data: userResponse,
+            message: 'Account created successfully'
+        });
 
-                        result = result.toObject()
-                        req.session.user = user
-                        res.status(200).send({
-                            data: result
-                        })
-                        res.end()
-                    }
-                })
-            } else {
-                console.log(url + '\n Error is2 - ' + err)
-
-                req.session.user = user
-
-                res.status(200).send({
-                    data: user
-                })
-                res.end()
-
-            }
-        })
-    } else {
-        let tap_account = true;
-        let userObj = new User({
-            name: name,
-            email: email,
-            password: hash,
-            is_social: is_social,
-            tap_account: tap_account,
-            verification_key: uuid(),
-            is_active: true,
-            created_at: new Date(),
-            updated_at: new Date()
-
-        })
-
-
-        User.findOne({
-            'email': email
-        }).exec(function(err, user) {
-            if (user == null) {
-                userObj.save(function(err1, result) {
-                    if (err1) {
-                        console.log(url + '\n Error is3 - ' + err1)
-                        res.status(400).send({
-                            error: 'invalid credentials',
-                            data: null,
-                            message: 'Invalid Credentials'
-                        })
-                        res.end()
-                    } else {
-
-
-                        result = result.toObject()
-                        req.session.user = user
-                        res.status(200).send({
-                            data: result
-                        })
-                        res.end()
-                    }
-                })
-            } else {
-                console.log(url + '\n Error is4 - ' + err)
-                    // res.status(501).send({
-                    //     error: 'user exists',
-                    //     data: null,
-                    //     message: 'Looks like you have already registered. Please login to continue.'
-                    // })
-                res.status(400).send({
-                    error: 'user exists',
-                    data: null,
-                    message: 'Looks like you have already registered. Please login to continue.'
-                })
-                res.end()
-            }
-        })
-
-
-
+    } catch (err) {
+        console.error(`Signup error: ${err.message} [${req.url}]`);
+        res.status(500).send({
+            error: 'server_error',
+            data: null,
+            message: 'Account creation failed. Please try again.'
+        });
     }
-})
+});
 
 
 

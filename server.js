@@ -7,14 +7,11 @@ let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 let app = express();
-let multer = require('multer');
-let https = require('https');
-let fs = require('fs');
+
 let csrf = require('csurf');
 let cookieParser = require('cookie-parser');
 let request = require('request');
 let helmet = require('helmet')
-let querystring = require('querystring');
 let router = express.Router();
 
 
